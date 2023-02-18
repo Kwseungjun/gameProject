@@ -25,3 +25,17 @@
 #include <windows.h>
 
 #endif
+
+#ifndef __DEFINE_DATA
+
+#define TRUE 1
+#define FALSE 0
+#define SUBMIT 4
+
+#define MAPXMAX 100
+#define MAPYMAX 30
+#define MAPXHALF 20
+#define MAPYHALF 10
+#define MAPXSTART 10
+
+#endif
