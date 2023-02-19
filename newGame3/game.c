@@ -2,6 +2,7 @@
 #include "game.h"
 #include "displayControl.h"
 #include "map.h"
+#include "attack.h"
 
 typedef struct {
 	int x, y;
@@ -14,7 +15,6 @@ typedef struct {
 	int hp;
 } MONSTER;
 
-int weapon = HG;
 
 //게임 내에서 사용할 키 컨트롤
 int keyControl()
@@ -94,163 +94,6 @@ int move(int* x, int* y, int _x, int _y)
 		return TRUE;
 	}
 	return FALSE;
-}
-
-void attack(int* x, int* y, int _x, int _y, char wh) {
-
-	int xData = *x + _x;
-	int yData = *y + _y;
-	char mapObject = tempMap[yData][xData];
-	//장애물을 만날때까지 총알이 날아감
-	if (weapon == HG || weapon == AR) {
-		while (TRUE) {
-			if (tempMap[yData][xData] != '0')
-				break;
-			tempMap[yData][xData] = wh;
-			yData += _y;
-			xData += _x;
-			mapObject = tempMap[yData][xData];
-		}
-	}
-	//샷건 탄퍼짐 구현
-	else if (weapon == SG) {
-		int isEmptyPlace = TRUE;
-		for (int i = 0; i < 9; i++) {
-			if (isEmptyPlace == FALSE)
-				break;
-			switch (i) {
-			case 0:
-				if (tempMap[yData][xData] == '0') {
-					tempMap[yData][xData] = 's';
-				}
-				else
-					isEmptyPlace = FALSE;
-				if (_x != 0) {
-					xData += _x;
-					yData--;
-				}
-				else {
-					yData += _y;
-					xData--;
-				}
-				break;
-			case 1:
-				if (tempMap[yData][xData] == '0')
-					tempMap[yData][xData] = 's';
-				if (_x != 0)
-					yData++;
-				else
-					xData++;
-
-				break;
-			
-			case 2:
-				if (tempMap[yData][xData] == '0')
-					tempMap[yData][xData] = 's';
-				else
-					isEmptyPlace = FALSE;
-				if (_x != 0)
-					yData++;
-				else
-					xData++;
-				break;
-				
-			case 3:
-				if (tempMap[yData][xData] == '0')
-					tempMap[yData][xData] = 's';
-				if (_x != 0) {
-					yData -= 3;
-					xData += _x;
-				}
-				else {
-					xData -= 3;
-					yData += _y;
-				}
-				break;
-
-			case 4: case 5: case 6: case 7: case 8:
-				if (tempMap[yData][xData] == '0')
-					tempMap[yData][xData] = 's';
-
-				if (_x != 0)
-					yData++;
-				else
-					xData++;
-				break;
-			
-			}
-		}
-	}
-}
-
-void endAttack(int* x, int* y, int _x, int _y, char wh) {
-	int xData = *x + _x;
-	int yData = *y + _y;
-	char mapObject = tempMap[yData][xData];
-	//HG, AR 지우기
-	if (weapon == HG || weapon == AR) {
-		while (TRUE) {
-			if (tempMap[yData][xData] != wh)
-				break;
-			tempMap[yData][xData] = '0';
-			yData += _y;
-			xData += _x;
-			mapObject = tempMap[yData][xData];
-		}
-	}
-	//샷건 지우기
-	else if (weapon == SG) {
-		for (int i = 0; i < 9; i++) {
-			switch (i) {
-			case 0:
-				if (tempMap[yData][xData] == 's') {
-					tempMap[yData][xData] = '0';
-				}
-				if (_x != 0) {
-					xData += _x;
-					yData--;
-				}
-				else {
-					yData += _y;
-					xData--;
-				}
-				break;
-			case 1: case 2:
-				if (tempMap[yData][xData] == 's')
-					tempMap[yData][xData] = '0';
-				if (_x != 0)
-					yData++;
-				else
-					xData++;
-
-				break;
-
-			case 3:
-				if (tempMap[yData][xData] == 's')
-					tempMap[yData][xData] = '0';
-
-				if (_x != 0) {
-					yData -= 3;
-					xData += _x;
-				}
-				else {
-					xData -= 3;
-					yData += _y;
-				}
-				break;
-
-			case 4: case 5: case 6: case 7: case 8:
-				if (tempMap[yData][xData] == 's')
-					tempMap[yData][xData] = '0';
-
-				if (_x != 0)
-					yData++;
-				else
-					xData++;
-				break;
-			}
-		}
-	}
 }
 
 //게임 시작시 플레이어 위치 가져오는 함수

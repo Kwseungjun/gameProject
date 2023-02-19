@@ -2,8 +2,6 @@
 
 #define _GAME_H
 
-int weapon;
-
 int move(int* x, int* y, int _x, int _y);
 int keyControl();
 void drawMap(int* x, int* y);
