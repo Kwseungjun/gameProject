@@ -8,6 +8,15 @@ typedef struct {
 	int exist;
 } BULLET;
 
+typedef struct {
+	int x, y;
+	int exist;
+	int hp;
+} MONSTER;
+
+int weapon = HG;
+
+//게임 내에서 사용할 키 컨트롤
 int keyControl()
 {
 	if (_kbhit() == 1) {
@@ -38,6 +47,18 @@ int keyControl()
 			return LEFT2;
 		else if (temp == 'd' || temp == 'D')
 			return RIGHT2;
+		else if (temp == '1')
+			weapon = HG;
+		else if (temp == '2')
+			weapon = AR;
+		else if (temp == '3')
+			weapon = SG;
+		else if (temp == 'e' || temp == 'E') {
+			if (weapon == SG)
+				weapon = HG;
+			else
+				weapon++;
+		}
 		else if (temp == ESC)
 			exit(1);
 		else if (temp == ' ')
@@ -45,6 +66,7 @@ int keyControl()
 	}
 }
 
+//메뉴 키 컨트롤(khbit 없음)
 int keyMenuControl()
 {	
 	char temp = _getch();
@@ -79,14 +101,85 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 	int xData = *x + _x;
 	int yData = *y + _y;
 	char mapObject = tempMap[yData][xData];
+	//장애물을 만날때까지 총알이 날아감
+	if (weapon == HG || weapon == AR) {
+		while (TRUE) {
+			if (tempMap[yData][xData] != '0')
+				break;
+			tempMap[yData][xData] = wh;
+			yData += _y;
+			xData += _x;
+			mapObject = tempMap[yData][xData];
+		}
+	}
+	//샷건 탄퍼짐 구현
+	else if (weapon == SG) {
+		int isEmptyPlace = TRUE;
+		for (int i = 0; i < 9; i++) {
+			if (isEmptyPlace == FALSE)
+				break;
+			switch (i) {
+			case 0:
+				if (tempMap[yData][xData] == '0') {
+					tempMap[yData][xData] = 's';
+				}
+				else
+					isEmptyPlace = FALSE;
+				if (_x != 0) {
+					xData += _x;
+					yData--;
+				}
+				else {
+					yData += _y;
+					xData--;
+				}
+				break;
+			case 1:
+				if (tempMap[yData][xData] == '0')
+					tempMap[yData][xData] = 's';
+				if (_x != 0)
+					yData++;
+				else
+					xData++;
 
-	while (TRUE) {
-		if (tempMap[yData][xData] != '0')
-			break;
-		tempMap[yData][xData] = wh;
-		yData += _y;
-		xData += _x;
-		mapObject = tempMap[yData][xData];
+				break;
+			
+			case 2:
+				if (tempMap[yData][xData] == '0')
+					tempMap[yData][xData] = 's';
+				else
+					isEmptyPlace = FALSE;
+				if (_x != 0)
+					yData++;
+				else
+					xData++;
+				break;
+				
+			case 3:
+				if (tempMap[yData][xData] == '0')
+					tempMap[yData][xData] = 's';
+				if (_x != 0) {
+					yData -= 3;
+					xData += _x;
+				}
+				else {
+					xData -= 3;
+					yData += _y;
+				}
+				break;
+
+			case 4: case 5: case 6: case 7: case 8:
+				if (tempMap[yData][xData] == '0')
+					tempMap[yData][xData] = 's';
+
+				if (_x != 0)
+					yData++;
+				else
+					xData++;
+				break;
+			
+			}
+		}
 	}
 }
 
@@ -94,17 +187,73 @@ void endAttack(int* x, int* y, int _x, int _y, char wh) {
 	int xData = *x + _x;
 	int yData = *y + _y;
 	char mapObject = tempMap[yData][xData];
+	//HG, AR 지우기
+	if (weapon == HG || weapon == AR) {
+		while (TRUE) {
+			if (tempMap[yData][xData] != wh)
+				break;
+			tempMap[yData][xData] = '0';
+			yData += _y;
+			xData += _x;
+			mapObject = tempMap[yData][xData];
+		}
+	}
+	//샷건 지우기
+	else if (weapon == SG) {
+		for (int i = 0; i < 9; i++) {
+			switch (i) {
+			case 0:
+				if (tempMap[yData][xData] == 's') {
+					tempMap[yData][xData] = '0';
+				}
+				if (_x != 0) {
+					xData += _x;
+					yData--;
+				}
+				else {
+					yData += _y;
+					xData--;
+				}
+				break;
+			case 1: case 2:
+				if (tempMap[yData][xData] == 's')
+					tempMap[yData][xData] = '0';
+				if (_x != 0)
+					yData++;
+				else
+					xData++;
 
-	while (TRUE) {
-		if (tempMap[yData][xData] != wh)
-			break;
-		tempMap[yData][xData] = '0';
-		yData += _y;
-		xData += _x;
-		mapObject = tempMap[yData][xData];
+				break;
+
+			case 3:
+				if (tempMap[yData][xData] == 's')
+					tempMap[yData][xData] = '0';
+
+				if (_x != 0) {
+					yData -= 3;
+					xData += _x;
+				}
+				else {
+					xData -= 3;
+					yData += _y;
+				}
+				break;
+
+			case 4: case 5: case 6: case 7: case 8:
+				if (tempMap[yData][xData] == 's')
+					tempMap[yData][xData] = '0';
+
+				if (_x != 0)
+					yData++;
+				else
+					xData++;
+				break;
+			}
+		}
 	}
 }
 
+//게임 시작시 플레이어 위치 가져오는 함수
 void userData(int* x, int* y) {
 	for (int h = 0; h < 20; h++) {
 		for (int w = 0; w < 99; w++) {
@@ -117,6 +266,7 @@ void userData(int* x, int* y) {
 	}
 }
 
+//전체 맵 그리기
 void drawMap(int* x, int* y)
 {
 	//뒷장 페이지 초기화
@@ -177,11 +327,17 @@ void drawMap(int* x, int* y)
 				*y = h;
 				printscr("☆");
 			}
+			//가로총알
 			else if (temp == 'w') {
 				printscr("─");
 			}
+			//세로총알
 			else if (temp == 'h') {
 				printscr("│");
+			}
+			//샷건
+			else if (temp == 's') {
+				printscr("⊙");
 			}
 		}
 		i++;
@@ -224,6 +380,7 @@ void game() {
 		case RIGHT2:
 			changeData = move(&x, &y, 1, 0);
 			break;
+			//방향키로 공격
 		case UP:
 			attack(&x, &y, 0, -1, 'h');
 			drawMap(&x, &y);

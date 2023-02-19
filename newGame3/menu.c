@@ -1,6 +1,7 @@
 #include "main.h"
 #include "displayControl.h"
 
+//처음 시작 메뉴
 void mainMenu(int x, int y) {
 	gotoxy(x, y);
 	printscr("Start");
@@ -10,6 +11,7 @@ void mainMenu(int x, int y) {
 	printscr("Exit");
 }
 
+//맵 선택 메뉴
 void mapMenu(int x, int y) {
 	gotoxy(x, y);
 	printscr("Map1");
@@ -19,6 +21,7 @@ void mapMenu(int x, int y) {
 	printscr("Map3");
 }
 
+//타이틀
 void title(int x, int y, int choice) {
 	gotoxy(0, 5);
 	printscr("                      ########      ########       #######   \n");
@@ -36,7 +39,7 @@ void title(int x, int y, int choice) {
 		mapMenu(x, y);
 }
 
-
+//w,s로 위, 아래 조종후 스페이스바로 선택
 int menuControl(int keyData, int* x, int* y) {
 	switch (keyData) {
 	case UP2:

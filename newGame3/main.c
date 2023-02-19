@@ -5,8 +5,6 @@
 #include "map.h"
 #include "menu.h"
 
-//┌─┐│└┘
-
 void init()
 {
 	//창 사이즈 조절

@@ -32,12 +32,5 @@
 #define TRUE 1
 #define FALSE 0
 #define SUBMIT 4
-#define ATTACK 4
-
-#define MAPXMAX 99
-#define MAPYMAX 29
-#define MAPXHALF 20
-#define MAPYHALF 10
-#define MAPXSTART 10
 
 #endif
