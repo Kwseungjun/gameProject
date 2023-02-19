@@ -3,17 +3,58 @@
 #include "displayControl.h"
 #include "map.h"
 
+typedef struct {
+	int x, y;
+	int exist;
+} BULLET;
+
 int keyControl()
 {
+	if (_kbhit() == 1) {
+		unsigned char temp = _getch();
+
+		if (temp == SPECIAL1 || temp == SPECIAL2) {
+			temp = _getch();
+			switch (temp) {
+			case UP:
+				return UP;
+				break;
+			case DOWN:
+				return DOWN;
+				break;
+			case LEFT:
+				return LEFT;
+				break;
+			case RIGHT:
+				return RIGHT;
+				break;
+			}
+		}
+		else if (temp == 'w' || temp == 'W')
+			return UP2;
+		else if (temp == 's' || temp == 'S')
+			return DOWN2;
+		else if (temp == 'a' || temp == 'A')
+			return LEFT2;
+		else if (temp == 'd' || temp == 'D')
+			return RIGHT2;
+		else if (temp == ESC)
+			exit(1);
+		else if (temp == ' ')
+			return ATTACK;
+	}
+}
+
+int keyMenuControl()
+{	
 	char temp = _getch();
+
 	if (temp == 'w' || temp == 'W')
 		return UP2;
 	else if (temp == 's' || temp == 'S')
 		return DOWN2;
-	else if (temp == 'a' || temp == 'A')
-		return LEFT2;
-	else if (temp == 'd' || temp == 'D')
-		return RIGHT2;
+	else if (temp == ESC)
+		exit(1);
 	else if (temp == ' ')
 		return SUBMIT;
 }
@@ -22,12 +63,46 @@ int move(int* x, int* y, int _x, int _y)
 {
 	char mapObject = tempMap[*y + _y][*x + _x];
 
+	//이동할 장소에 장애물이 있는지 확인
 	if (mapObject == '0') {
 		tempMap[*y][*x] = '0';
 		tempMap[*y + _y][*x + _x] = 'p';
+		*x += _x;
+		*y += _y;
 		return TRUE;
 	}
 	return FALSE;
+}
+
+void attack(int* x, int* y, int _x, int _y, char wh) {
+
+	int xData = *x + _x;
+	int yData = *y + _y;
+	char mapObject = tempMap[yData][xData];
+
+	while (TRUE) {
+		if (tempMap[yData][xData] != '0')
+			break;
+		tempMap[yData][xData] = wh;
+		yData += _y;
+		xData += _x;
+		mapObject = tempMap[yData][xData];
+	}
+}
+
+void endAttack(int* x, int* y, int _x, int _y, char wh) {
+	int xData = *x + _x;
+	int yData = *y + _y;
+	char mapObject = tempMap[yData][xData];
+
+	while (TRUE) {
+		if (tempMap[yData][xData] != wh)
+			break;
+		tempMap[yData][xData] = '0';
+		yData += _y;
+		xData += _x;
+		mapObject = tempMap[yData][xData];
+	}
 }
 
 void userData(int* x, int* y) {
@@ -88,8 +163,8 @@ void drawMap(int* x, int* y)
 		wHigh = *x + MAPXHALF + wLeftDif;
 
 	//맵 그리기
-	for (int h = hLow; h < hHigh; h++) {
-		for (int w = wLow; w < wHigh; w++) {
+	for (int h = hLow; h <= hHigh; h++) {
+		for (int w = wLow; w <= wHigh; w++) {
 			char temp = tempMap[h][w];
 			if (temp == '0') {
 				printscr("  ");
@@ -102,6 +177,12 @@ void drawMap(int* x, int* y)
 				*y = h;
 				printscr("☆");
 			}
+			else if (temp == 'w') {
+				printscr("─");
+			}
+			else if (temp == 'h') {
+				printscr("│");
+			}
 		}
 		i++;
 		gotoxy(MAPXSTART, i);
@@ -110,6 +191,8 @@ void drawMap(int* x, int* y)
 	//뒷장, 앞장 전환
 	scr_switch();
 }
+
+
 
 void game() {
 
@@ -125,7 +208,9 @@ void game() {
 		if (changeData == TRUE)
 			drawMap(&x, &y);
 
-		switch (keyControl()) {
+		int keyData = keyControl();
+
+		switch (keyData) {
 			//위, 아래, 왼쪽, 오른쪽 이동
 		case UP2:
 			changeData = move(&x, &y, 0, -1);
@@ -138,6 +223,34 @@ void game() {
 			break;
 		case RIGHT2:
 			changeData = move(&x, &y, 1, 0);
+			break;
+		case UP:
+			attack(&x, &y, 0, -1, 'h');
+			drawMap(&x, &y);
+			Sleep(50);
+			endAttack(&x, &y, 0, -1, 'h');
+			drawMap(&x, &y);
+			break;
+		case DOWN:
+			attack(&x, &y, 0, 1, 'h');
+			drawMap(&x, &y);
+			Sleep(50);
+			endAttack(&x, &y, 0, 1, 'h');
+			drawMap(&x, &y);
+			break;
+		case LEFT:
+			attack(&x, &y, -1, 0, 'w');
+			drawMap(&x, &y);
+			Sleep(50);
+			endAttack(&x, &y, -1, 0, 'w');
+			drawMap(&x, &y);
+			break;
+		case RIGHT:
+			attack(&x, &y, 1, 0, 'w');
+			drawMap(&x, &y);
+			Sleep(50);
+			endAttack(&x, &y, 1, 0, 'w');
+			drawMap(&x, &y);
 			break;
 		}
 	}
