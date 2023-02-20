@@ -2,6 +2,7 @@
 #include "game.h"
 
 int weapon = HG;
+int damage = 10;
 
 void attack(int* x, int* y, int _x, int _y, char wh) {
 
@@ -9,10 +10,23 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 	int yData = *y + _y;
 	char mapObject = tempMap[yData][xData];
 	//장애물을 만날때까지 총알이 날아감
-	if (weapon == HG || weapon == AR) {
+	if (weapon == HG || weapon == AR || weapon == SR) {
 		while (TRUE) {
+			if (tempMap[yData][xData] == 'q'|| tempMap[yData][xData] == 'w' || tempMap[yData][xData] == 'e' || tempMap[yData][xData] == 'r') {
+				for (int i = 0; i < MAXMONSTER; i++) {
+					if (mon[i].x == xData && mon[i].y == yData) {
+						mon[i].hp -= damage;
+						if (mon[i].hp < 0) {
+							tempMap[yData][xData] = '0';
+							break;
+						}
+					}
+				}
+			}
+
 			if (tempMap[yData][xData] != '0')
 				break;
+
 			tempMap[yData][xData] = wh;
 			yData += _y;
 			xData += _x;
@@ -22,9 +36,24 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 	//샷건 탄퍼짐 구현
 	else if (weapon == SG) {
 		int isEmptyPlace = TRUE;
+
 		for (int i = 0; i < 9; i++) {
+
+			if (tempMap[yData][xData] == 'q' || tempMap[yData][xData] == 't' || tempMap[yData][xData] == 'e' || tempMap[yData][xData] == 'r') {
+				for (int i = 0; i < MAXMONSTER; i++) {
+					if (mon[i].x == xData && mon[i].y == yData) {
+						mon[i].hp -= damage;
+						if (mon[i].hp < 0) {
+							tempMap[yData][xData] = '0';
+							break;
+						}
+					}
+				}
+			}
+
 			if (isEmptyPlace == FALSE)
 				break;
+
 			switch (i) {
 			case 0:
 				if (tempMap[yData][xData] == '0') {
@@ -95,7 +124,7 @@ void endAttack(int* x, int* y, int _x, int _y, char wh) {
 	int yData = *y + _y;
 	char mapObject = tempMap[yData][xData];
 	//HG, AR 지우기
-	if (weapon == HG || weapon == AR) {
+	if (weapon == HG || weapon == AR || weapon == SR) {
 		while (TRUE) {
 			if (tempMap[yData][xData] != wh)
 				break;

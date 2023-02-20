@@ -9,12 +9,12 @@ typedef struct {
 	int exist;
 } BULLET;
 
-typedef struct {
-	int x, y;
-	int exist;
-	int hp;
-} MONSTER;
+int frameCount = 0;
+int delay = 10;
+int monsterFrameSync = 100;
+int monsterCount = 0;
 
+MONSTER mon[MAXMONSTER];
 
 //게임 내에서 사용할 키 컨트롤
 int keyControl()
@@ -47,17 +47,36 @@ int keyControl()
 			return LEFT2;
 		else if (temp == 'd' || temp == 'D')
 			return RIGHT2;
-		else if (temp == '1')
+		else if (temp == '1') {
 			weapon = HG;
-		else if (temp == '2')
+			damage = 10;
+		}
+		else if (temp == '2') {
 			weapon = AR;
-		else if (temp == '3')
+			damage = 5;
+		}
+		else if (temp == '3') {
 			weapon = SG;
+			damage = 30;
+		}
+		else if (temp == '4') {
+			weapon = SR;
+			damage = 100;
+		}
 		else if (temp == 'e' || temp == 'E') {
-			if (weapon == SG)
+			if (weapon == SG) {
 				weapon = HG;
-			else
+				damage = 10;
+			}
+			else {
 				weapon++;
+				if (weapon == AR)
+					damage = 5;
+				else if (weapon == SG)
+					damage = 30;
+				else if (weapon == SR)
+					damage = 100;
+			}
 		}
 		else if (temp == ESC)
 			exit(1);
@@ -182,6 +201,19 @@ void drawMap(int* x, int* y)
 			else if (temp == 's') {
 				printscr("⊙");
 			}
+			//몬스터
+			else if (temp == 'q') {
+				printscr("◆");
+			}
+			else if (temp == 't') {
+				printscr("◇");
+			}
+			else if (temp == 'e') {
+				printscr("▲");
+			}
+			else if (temp == 'r') {
+				printscr("△");
+			}
 		}
 		i++;
 		gotoxy(MAPXSTART, i);
@@ -191,7 +223,35 @@ void drawMap(int* x, int* y)
 	scr_switch();
 }
 
+void spawnMonster() {
+	while (TRUE) {
+		if (monsterCount == MAXMONSTER)
+			break;
 
+		mon[monsterCount].x = rand() % MAPXMAX;
+		mon[monsterCount].y = rand() % MAPYMAX;
+		if (tempMap[mon[monsterCount].y][mon[monsterCount].x] == '0') {
+			if (monsterCount % 4 == 0) {
+				tempMap[mon[monsterCount].y][mon[monsterCount].x] = 'q';
+				mon[monsterCount].hp = 100;
+			}
+			else if (monsterCount % 4 == 1) {
+				tempMap[mon[monsterCount].y][mon[monsterCount].x] = 't';
+				mon[monsterCount].hp = 200;
+			}
+			else if (monsterCount % 4 == 2) {
+				tempMap[mon[monsterCount].y][mon[monsterCount].x] = 'e';
+				mon[monsterCount].hp = 50;
+			}
+			else if (monsterCount % 4 == 3) {
+				tempMap[mon[monsterCount].y][mon[monsterCount].x] = 'r';
+				mon[monsterCount].hp = 80;
+			}
+			monsterCount++;
+			break;
+		}
+	}
+}
 
 void game() {
 
@@ -206,6 +266,11 @@ void game() {
 		//캐릭터 움직임에 변화가 있을시 맵 다시 그리기
 		if (changeData == TRUE)
 			drawMap(&x, &y);
+
+		if (frameCount % monsterFrameSync == 0)
+			spawnMonster();
+		Sleep(delay);
+		frameCount++;
 
 		int keyData = keyControl();
 
@@ -253,6 +318,7 @@ void game() {
 			drawMap(&x, &y);
 			break;
 		}
-	}
 
+
+	}
 }
