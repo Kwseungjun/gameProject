@@ -1,22 +1,22 @@
 #include "map.h"
 #include "game.h"
+#include "attack.h"
 
-int weapon = HG;
-int damage = 10;
+int selectWeapon = 0;
 
 void attack(int* x, int* y, int _x, int _y, char wh) {
-
+	weapon[selectWeapon].bullet--;
 	int xData = *x + _x;
 	int yData = *y + _y;
 	char mapObject = tempMap[yData][xData];
 	//장애물을 만날때까지 총알이 날아감
-	if (weapon == HG || weapon == AR || weapon == SR) {
+	if (selectWeapon == HG || selectWeapon == AR || selectWeapon == SR) {
 		while (TRUE) {
-			if (tempMap[yData][xData] == 'q'|| tempMap[yData][xData] == 'w' || tempMap[yData][xData] == 'e' || tempMap[yData][xData] == 'r') {
+			if (tempMap[yData][xData] == 'q'|| tempMap[yData][xData] == 't' || tempMap[yData][xData] == 'e' || tempMap[yData][xData] == 'r') {
 				for (int i = 0; i < MAXMONSTER; i++) {
 					if (mon[i].x == xData && mon[i].y == yData) {
-						mon[i].hp -= damage;
-						if (mon[i].hp < 0) {
+						mon[i].hp -= weapon[selectWeapon].damage;
+						if (mon[i].hp <= 0) {
 							tempMap[yData][xData] = '0';
 							break;
 						}
@@ -34,7 +34,7 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 		}
 	}
 	//샷건 탄퍼짐 구현
-	else if (weapon == SG) {
+	else if (selectWeapon == SG) {
 		int isEmptyPlace = TRUE;
 
 		for (int i = 0; i < 9; i++) {
@@ -42,8 +42,8 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 			if (tempMap[yData][xData] == 'q' || tempMap[yData][xData] == 't' || tempMap[yData][xData] == 'e' || tempMap[yData][xData] == 'r') {
 				for (int i = 0; i < MAXMONSTER; i++) {
 					if (mon[i].x == xData && mon[i].y == yData) {
-						mon[i].hp -= damage;
-						if (mon[i].hp < 0) {
+						mon[i].hp -= weapon[selectWeapon].damage;
+						if (mon[i].hp <= 0) {
 							tempMap[yData][xData] = '0';
 							break;
 						}
@@ -124,7 +124,7 @@ void endAttack(int* x, int* y, int _x, int _y, char wh) {
 	int yData = *y + _y;
 	char mapObject = tempMap[yData][xData];
 	//HG, AR 지우기
-	if (weapon == HG || weapon == AR || weapon == SR) {
+	if (selectWeapon == HG || selectWeapon == AR || selectWeapon == SR) {
 		while (TRUE) {
 			if (tempMap[yData][xData] != wh)
 				break;
@@ -135,7 +135,7 @@ void endAttack(int* x, int* y, int _x, int _y, char wh) {
 		}
 	}
 	//샷건 지우기
-	else if (weapon == SG) {
+	else if (selectWeapon == SG) {
 		for (int i = 0; i < 9; i++) {
 			switch (i) {
 			case 0:

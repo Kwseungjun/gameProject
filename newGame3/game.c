@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "main.h"
 #include "game.h"
 #include "displayControl.h"
@@ -13,6 +15,8 @@ int frameCount = 0;
 int delay = 10;
 int monsterFrameSync = 100;
 int monsterCount = 0;
+int startTime;
+int HGtime, SGtime, SRtime;
 
 MONSTER mon[MAXMONSTER];
 
@@ -48,34 +52,23 @@ int keyControl()
 		else if (temp == 'd' || temp == 'D')
 			return RIGHT2;
 		else if (temp == '1') {
-			weapon = HG;
-			damage = 10;
+			selectWeapon = HG;
 		}
 		else if (temp == '2') {
-			weapon = AR;
-			damage = 5;
+			selectWeapon = AR;
 		}
 		else if (temp == '3') {
-			weapon = SG;
-			damage = 30;
+			selectWeapon = SG;
 		}
 		else if (temp == '4') {
-			weapon = SR;
-			damage = 100;
+			selectWeapon = SR;
 		}
 		else if (temp == 'e' || temp == 'E') {
-			if (weapon == SG) {
-				weapon = HG;
-				damage = 10;
+			if (selectWeapon == SR) {
+				selectWeapon = HG;
 			}
 			else {
-				weapon++;
-				if (weapon == AR)
-					damage = 5;
-				else if (weapon == SG)
-					damage = 30;
-				else if (weapon == SR)
-					damage = 100;
+				selectWeapon++;
 			}
 		}
 		else if (temp == ESC)
@@ -128,6 +121,33 @@ void userData(int* x, int* y) {
 	}
 }
 
+void drawInfo() {
+	gotoxy(10, 24);
+	printscr("현재무기: ");
+	switch (selectWeapon) {
+	case HG:
+		printscr("HG");
+		break;
+	case AR:
+		printscr("AR");
+		break;
+	case SG:
+		printscr("SG");
+		break;
+	case SR:
+		printscr("SR");
+		break;
+	}
+
+	gotoxy(10, 25);
+	printscr("남은 총알: ");
+	int weaponBullet = weapon[selectWeapon].bullet;
+
+	char* weaponBullet_char = (char*)malloc(sizeof(char) * 4);
+	_itoa(weaponBullet, weaponBullet_char, 10);
+	printscr(weaponBullet_char);
+}
+
 //전체 맵 그리기
 void drawMap(int* x, int* y)
 {
@@ -135,6 +155,7 @@ void drawMap(int* x, int* y)
 	scr_clear();
 	//테두리 그리기
 	border();
+	drawInfo();
 	gotoxy(MAPXSTART, 1);
 	//플레이어 기준 x값 최소, 최대 | y값 최소 최대 결정
 	int hLow, hHigh, wLow, wHigh;
@@ -253,16 +274,39 @@ void spawnMonster() {
 	}
 }
 
+void gameInit() {
+
+	weapon[HG].bullet = 100;
+	weapon[HG].damage = HGDAMAGE;
+
+	weapon[AR].bullet = 100;
+	weapon[AR].damage = ARDAMAGE;
+
+	weapon[SG].bullet = 100;
+	weapon[SG].damage = SGDAMAGE;
+
+	weapon[SR].bullet = 100;
+	weapon[SR].damage = SRDAMAGE;
+}
+
 void game() {
 
 	int x;
 	int y;
 	int changeData = TRUE;
+	int runTime, startTime;
+
+	startTime = time(NULL);
 
 	//게임 시작시 플레이어 위치 가져오기
 	userData(&x, &y);
 
+	gameInit();
+
 	while (1) {
+
+		runTime = time(NULL) - startTime;
+
 		//캐릭터 움직임에 변화가 있을시 맵 다시 그리기
 		if (changeData == TRUE)
 			drawMap(&x, &y);

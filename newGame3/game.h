@@ -3,11 +3,10 @@
 #define _GAME_H
 
 #define ATTACK 4
-#define HG 0
-#define AR 1
-#define SG 2
-#define SR 3
 #define MAXMONSTER 30
+#define HGINTERVAL 1
+#define SGINTERVAL 2
+#define SRINTERVAL 3
 
 typedef struct {
 	int x, y;
@@ -25,6 +24,8 @@ int keyControl();
 void drawMap(int* x, int* y);
 void game();
 void userData(int* x, int* y);
+void gameInit();
+void drawInfo();
 
 MONSTER mon[MAXMONSTER];
 

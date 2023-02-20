@@ -26,6 +26,13 @@
 
 #endif
 
+#ifndef __TIME_H_
+
+#define __TIME_H_
+#include <time.h>
+
+#endif
+
 #ifndef __DEFINE_DATA
 
 #define __DEINFE_DATA

@@ -152,7 +152,7 @@ void printscr(const char* str)
 	WriteFile(scr_handle[hidden_index], str, strlen(str), &dw, NULL);
 }
 
-void printintscr(int str)
+void printintscr(int* str)
 {
 	// const char*형으로 매개변수를 전달함.
 	DWORD dw;
