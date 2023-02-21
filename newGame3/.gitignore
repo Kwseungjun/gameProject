@@ -1,0 +1,14 @@
+*.vcxproj
+*.vcxproj.*
+*.obj
+*.log
+*.ilk
+*.exe
+*.pdb
+*.tlog
+*.recipe
+*.idb
+*.sln
+
+../.vs
+../x64
