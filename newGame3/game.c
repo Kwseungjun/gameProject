@@ -5,16 +5,12 @@
 #include "attack.h"
 #include "spawnObject.h"
 
-typedef struct {
-	int x, y;
-	int exist;
-} BULLET;
-
 int frameCount = 0;
 int delay = 10;
 int magazineFrameSync = 500;
 int monsterFrameSync = 100;
 int healthFrameSync = 1000;
+int monsterMoveFrameSync = 10;
 int reloadFrameSync = 100;
 int magazineCount = 0;
 int monsterCount = 0;
@@ -23,6 +19,7 @@ int startTime;
 int maxHP = 5;
 int userHP = 5;
 int gameLoop = 1;
+int isReload = FALSE;
 
 MONSTER mon[MAXMONSTER];
 
@@ -102,16 +99,16 @@ int move(int* x, int* y, int _x, int _y)
 	else if (mapObject == 'z' || mapObject == 'x' || mapObject == 'c' || mapObject == 'v' || mapObject == 'n' || mapObject2 == 'z' || mapObject2 == 'x' || mapObject2 == 'c' || mapObject2 == 'v' || mapObject2 == 'n') {
 		switch (mapObject) {
 		case 'z':
-			weapon[HG].resetMagazine++;
+			weapon[HG].magazine++;
 			break;
 		case 'x':
-			weapon[AR].resetMagazine++;
+			weapon[AR].magazine++;
 			break;
 		case 'c':
-			weapon[SG].resetMagazine++;
+			weapon[SG].magazine++;
 			break;
 		case 'v':
-			weapon[SR].resetMagazine++;
+			weapon[SR].magazine++;
 			break;
 		case 'n':
 			userHP++;
@@ -119,16 +116,16 @@ int move(int* x, int* y, int _x, int _y)
 		}
 		switch (mapObject2) {
 		case 'z':
-			weapon[HG].resetMagazine++;
+			weapon[HG].magazine++;
 			break;
 		case 'x':
-			weapon[AR].resetMagazine++;
+			weapon[AR].magazine++;
 			break;
 		case 'c':
-			weapon[SG].resetMagazine++;
+			weapon[SG].magazine++;
 			break;
 		case 'v':
-			weapon[SR].resetMagazine++;
+			weapon[SR].magazine++;
 			break;
 		case 'n':
 			userHP++;
@@ -136,7 +133,7 @@ int move(int* x, int* y, int _x, int _y)
 		}
 
 		tempMap[*y][*x] = '0';
-		tempMap[*y-1][*x] = '0';
+		tempMap[*y - 1][*x] = '0';
 		tempMap[*y + _y][*x + _x] = 'p';
 		tempMap[*y + _y - 1][*x + _x] = 'P';
 		*x += _x;
@@ -144,6 +141,7 @@ int move(int* x, int* y, int _x, int _y)
 		return TRUE;
 	}
 	//피격시 체력감소
+	/*
 	else if (mapObject == 'q' || mapObject == 'e' || mapObject == 'r' || mapObject == 't') {
 		userHP--;
 		if (userHP <= 0)
@@ -156,6 +154,7 @@ int move(int* x, int* y, int _x, int _y)
 			gameLoop = 0;
 		return TRUE;
 	}
+	*/
 	return FALSE;
 }
 
@@ -172,31 +171,113 @@ void userData(int* x, int* y) {
 	}
 }
 
+void monsterMove(int* x, int* y) {
+	int count = 0;
+	int xDifferenceValue, yDifferenceValue;
+	while (count < monsterCount) {
+		if (frameCount % mon[count].typeFrame == 0) {
+			if (mon[count].exist == TRUE) {
+
+				xDifferenceValue = *x - mon[count].x;
+				yDifferenceValue = *y - mon[count].y;
+
+				if (abs(xDifferenceValue) > abs(yDifferenceValue)) {
+
+					if (tempMap[mon[count].y][mon[count].x + 1] == 'P' || tempMap[mon[count].y][mon[count].x - 1] == 'P') {
+						userHP -= 2;
+						if (userHP <= 0)
+							gameLoop = FALSE;
+					}
+					else if (tempMap[mon[count].y][mon[count].x + 1] == 'p' || tempMap[mon[count].y][mon[count].x - 1] == 'p') {
+						userHP--;
+						if (userHP <= 0)
+							gameLoop = FALSE;
+					}
+					else if (xDifferenceValue > 0 && tempMap[mon[count].y][mon[count].x + 1] == '0') {
+						tempMap[mon[count].y][mon[count].x + 1] = tempMap[mon[count].y][mon[count].x];
+						tempMap[mon[count].y][mon[count].x] = '0';
+						mon[count].x++;
+					}
+					else if (xDifferenceValue <= 0 && tempMap[mon[count].y][mon[count].x - 1] == '0') {
+						tempMap[mon[count].y][mon[count].x - 1] = tempMap[mon[count].y][mon[count].x];
+						tempMap[mon[count].y][mon[count].x] = '0';
+						mon[count].x--;
+					}
+					else if (yDifferenceValue > 0 && tempMap[mon[count].y + 1][mon[count].x] == '0') {
+						tempMap[mon[count].y + 1][mon[count].x] = tempMap[mon[count].y][mon[count].x];
+						tempMap[mon[count].y][mon[count].x] = '0';
+						mon[count].y++;
+					}
+					else if (yDifferenceValue <= 0 && tempMap[mon[count].y - 1][mon[count].x] == '0') {
+						tempMap[mon[count].y - 1][mon[count].x] = tempMap[mon[count].y][mon[count].x];
+						tempMap[mon[count].y][mon[count].x] = '0';
+						mon[count].y--;
+					}
+				}
+
+				else {
+					if (tempMap[mon[count].y + 1][mon[count].x] == 'P' || tempMap[mon[count].y - 1][mon[count].x] == 'P') {
+						userHP -= 2;
+						if (userHP <= 0)
+							gameLoop = FALSE;
+					}
+					else if (tempMap[mon[count].y + 1][mon[count].x] == 'p' || tempMap[mon[count].y - 1][mon[count].x] == 'p') {
+						userHP--;
+						if (userHP <= 0)
+							gameLoop = FALSE;
+					}
+					else if (yDifferenceValue > 0 && tempMap[mon[count].y + 1][mon[count].x] == '0') {
+						tempMap[mon[count].y + 1][mon[count].x] = tempMap[mon[count].y][mon[count].x];
+						tempMap[mon[count].y][mon[count].x] = '0';
+						mon[count].y++;
+					}
+					else if (yDifferenceValue <= 0 && tempMap[mon[count].y - 1][mon[count].x] == '0') {
+						tempMap[mon[count].y - 1][mon[count].x] = tempMap[mon[count].y][mon[count].x];
+						tempMap[mon[count].y][mon[count].x] = '0';
+						mon[count].y--;
+					}
+					else if (xDifferenceValue > 0 && tempMap[mon[count].y][mon[count].x + 1] == '0') {
+						tempMap[mon[count].y][mon[count].x + 1] = tempMap[mon[count].y][mon[count].x];
+						tempMap[mon[count].y][mon[count].x] = '0';
+						mon[count].x++;
+					}
+					else if (xDifferenceValue <= 0 && tempMap[mon[count].y][mon[count].x - 1] == '0') {
+						tempMap[mon[count].y][mon[count].x - 1] = tempMap[mon[count].y][mon[count].x];
+						tempMap[mon[count].y][mon[count].x] = '0';
+						mon[count].x--;
+					}
+				}
+			}
+		}
+		count++;
+	}
+}
+
 void gameInit() {
 
 	weapon[HG].bullet = 15;
 	weapon[HG].damage = HGDAMAGE;
 	weapon[HG].lastShootTime = 0;
 	weapon[HG].weaponSetTime = 1;
-	weapon[HG].resetMagazine = 1;
+	weapon[HG].magazine = 1;
 
 	weapon[AR].bullet = 30;
 	weapon[AR].damage = ARDAMAGE;
 	weapon[AR].lastShootTime = 0;
 	weapon[AR].weaponSetTime = 0;
-	weapon[AR].resetMagazine = 1;
+	weapon[AR].magazine = 1;
 
 	weapon[SG].bullet = 7;
 	weapon[SG].damage = SGDAMAGE;
 	weapon[SG].lastShootTime = 0;
 	weapon[SG].weaponSetTime = 1;
-	weapon[SG].resetMagazine = 1;
+	weapon[SG].magazine = 1;
 
 	weapon[SR].bullet = 5;
 	weapon[SR].damage = SRDAMAGE;
 	weapon[SR].lastShootTime = 0;
 	weapon[SR].weaponSetTime = 2;
-	weapon[SR].resetMagazine = 1;
+	weapon[SR].magazine = 1;
 
 	magazine[HG].oneMagazine = 15;
 	magazine[AR].oneMagazine = 30;
@@ -224,8 +305,8 @@ void game() {
 
 
 		//캐릭터 움직임에 변화가 있을시 맵 다시 그리기
-		if (changeData == TRUE)
-			drawMap(&x, &y);
+		//if (changeData == TRUE)
+			
 
 		if (frameCount % monsterFrameSync == 0)
 			spawnMonster();
@@ -233,8 +314,15 @@ void game() {
 			spawnMagazine();
 		if (frameCount % healthFrameSync == 0)
 			spawnHealth();
+		if (frameCount % monsterMoveFrameSync == 0)
+			monsterMove(&x, &y);
+
+		if (runTime - weapon[selectWeapon].reload > weapon[selectWeapon].weaponSetTime + 1)
+			isReload = FALSE;
+
 		Sleep(delay);
 
+		drawMap(&x, &y);
 
 		frameCount++;
 
@@ -257,8 +345,8 @@ void game() {
 			//방향키로 공격
 		case UP:
 			if (weapon[selectWeapon].bullet <= 0) {
-				if (weapon[selectWeapon].resetMagazine > 0) {
-					weapon[selectWeapon].resetMagazine--;
+				if (weapon[selectWeapon].magazine > 0 && (runTime - weapon[selectWeapon].reload > weapon[selectWeapon].weaponSetTime + 1)) {
+					weapon[selectWeapon].magazine--;
 					weapon[selectWeapon].bullet = magazine[selectWeapon].oneMagazine;
 				}
 				else
@@ -271,12 +359,16 @@ void game() {
 				endAttack(&x, &y, 0, -1, 'h');
 				drawMap(&x, &y);
 				weapon[selectWeapon].lastShootTime = runTime;
+				if (weapon[selectWeapon].bullet == 0) {
+					weapon[selectWeapon].reload = runTime;
+					isReload = TRUE;
+				}
 			}
 			break;
 		case DOWN:
 			if (weapon[selectWeapon].bullet <= 0) {
-				if (weapon[selectWeapon].resetMagazine > 0) {
-					weapon[selectWeapon].resetMagazine--;
+				if (weapon[selectWeapon].magazine > 0 && (runTime - weapon[selectWeapon].reload > weapon[selectWeapon].weaponSetTime + 1)) {
+					weapon[selectWeapon].magazine--;
 					weapon[selectWeapon].bullet = magazine[selectWeapon].oneMagazine;
 				}
 				else
@@ -289,12 +381,16 @@ void game() {
 				endAttack(&x, &y, 0, 1, 'h');
 				drawMap(&x, &y);
 				weapon[selectWeapon].lastShootTime = runTime;
+				if (weapon[selectWeapon].bullet == 0) {
+					weapon[selectWeapon].reload = runTime;
+					isReload = TRUE;
+				}
 			}
 			break;
 		case LEFT:
 			if (weapon[selectWeapon].bullet <= 0) {
-				if (weapon[selectWeapon].resetMagazine > 0) {
-					weapon[selectWeapon].resetMagazine--;
+				if (weapon[selectWeapon].magazine > 0 && (runTime - weapon[selectWeapon].reload > weapon[selectWeapon].weaponSetTime + 1)) {
+					weapon[selectWeapon].magazine--;
 					weapon[selectWeapon].bullet = magazine[selectWeapon].oneMagazine;
 				}
 				else
@@ -307,12 +403,16 @@ void game() {
 				endAttack(&x, &y, -1, 0, 'w');
 				drawMap(&x, &y);
 				weapon[selectWeapon].lastShootTime = runTime;
+				if (weapon[selectWeapon].bullet == 0) {
+					weapon[selectWeapon].reload = runTime;
+					isReload = TRUE;
+				}
 			}
 			break;
 		case RIGHT:
 			if (weapon[selectWeapon].bullet <= 0) {
-				if (weapon[selectWeapon].resetMagazine > 0) {
-					weapon[selectWeapon].resetMagazine--;
+				if (weapon[selectWeapon].magazine > 0 && (runTime - weapon[selectWeapon].reload > weapon[selectWeapon].weaponSetTime + 1)) {
+					weapon[selectWeapon].magazine--;
 					weapon[selectWeapon].bullet = magazine[selectWeapon].oneMagazine;
 				}
 				else
@@ -325,6 +425,10 @@ void game() {
 				endAttack(&x, &y, 1, 0, 'w');
 				drawMap(&x, &y);
 				weapon[selectWeapon].lastShootTime = runTime;
+				if (weapon[selectWeapon].bullet == 0) {
+					weapon[selectWeapon].reload = runTime;
+					isReload = TRUE;
+				}
 			}
 			break;
 		}

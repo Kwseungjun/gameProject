@@ -17,8 +17,10 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 				for (int i = 0; i < MAXMONSTER; i++) {
 					if (mon[i].x == xData && mon[i].y == yData) {
 						mon[i].hp -= weapon[selectWeapon].damage;
+						//몬스터 사망
 						if (mon[i].hp <= 0) {
 							tempMap[yData][xData] = '0';
+							mon[i].exist = FALSE;
 							break;
 						}
 					}
@@ -50,8 +52,10 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 				for (int i = 0; i < MAXMONSTER; i++) {
 					if (mon[i].x == xData && mon[i].y == yData) {
 						mon[i].hp -= weapon[selectWeapon].damage;
+						//몬스터 사망
 						if (mon[i].hp <= 0) {
 							tempMap[yData][xData] = '0';
+							mon[i].exist == FALSE;
 							break;
 						}
 					}
@@ -132,7 +136,7 @@ void endAttack(int* x, int* y, int _x, int _y, char wh) {
 	int xData = *x + _x;
 	int yData = *y + _y;
 	char mapObject = tempMap[yData][xData];
-	//HG, AR 지우기
+	//HG, AR, SR 지우기
 	if (selectWeapon == HG || selectWeapon == AR || selectWeapon == SR) {
 		while (TRUE) {
 			if (tempMap[yData][xData] == wh) {

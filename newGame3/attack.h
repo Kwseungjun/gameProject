@@ -19,7 +19,7 @@ typedef struct {
 
 	int lastShootTime;
 	int weaponSetTime;
-	int resetMagazine;
+	int reload;
 } WEAPON;
 
 typedef struct {

@@ -21,6 +21,7 @@ int main(void) {
 	while (TRUE) {
  		int userChoice = menuChoice();
 		gameLoop = TRUE;
+		userHP = maxHP;
 		switch (userChoice) {
 		case 0:
 			//게임시작
