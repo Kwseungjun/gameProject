@@ -1,10 +1,9 @@
-#define _CRT_SECURE_NO_WARNINGS
-
 #include "main.h"
 #include "game.h"
 #include "displayControl.h"
 #include "map.h"
 #include "attack.h"
+#include "spawnObject.h"
 
 typedef struct {
 	int x, y;
@@ -13,10 +12,17 @@ typedef struct {
 
 int frameCount = 0;
 int delay = 10;
+int magazineFrameSync = 500;
 int monsterFrameSync = 100;
+int healthFrameSync = 1000;
+int reloadFrameSync = 100;
+int magazineCount = 0;
 int monsterCount = 0;
+int healthCount = 0;
 int startTime;
-int HGtime, SGtime, SRtime;
+int maxHP = 5;
+int userHP = 5;
+int gameLoop = 1;
 
 MONSTER mon[MAXMONSTER];
 
@@ -78,31 +84,76 @@ int keyControl()
 	}
 }
 
-//메뉴 키 컨트롤(khbit 없음)
-int keyMenuControl()
-{	
-	char temp = _getch();
-
-	if (temp == 'w' || temp == 'W')
-		return UP2;
-	else if (temp == 's' || temp == 'S')
-		return DOWN2;
-	else if (temp == ESC)
-		exit(1);
-	else if (temp == ' ')
-		return SUBMIT;
-}
-
 int move(int* x, int* y, int _x, int _y)
 {
 	char mapObject = tempMap[*y + _y][*x + _x];
+	char mapObject2 = tempMap[*y + _y - 1][*x + _x];
 
 	//이동할 장소에 장애물이 있는지 확인
-	if (mapObject == '0') {
+	if ((mapObject == '0' && mapObject2 == '0') || (mapObject == 'P' && mapObject2 == '0') || (mapObject == '0' && mapObject2 == 'p')) {
 		tempMap[*y][*x] = '0';
+		tempMap[*y-1][*x] = '0';
 		tempMap[*y + _y][*x + _x] = 'p';
+		tempMap[*y + _y - 1][*x + _x] = 'P';
 		*x += _x;
 		*y += _y;
+		return TRUE;
+	}
+	else if (mapObject == 'z' || mapObject == 'x' || mapObject == 'c' || mapObject == 'v' || mapObject == 'n' || mapObject2 == 'z' || mapObject2 == 'x' || mapObject2 == 'c' || mapObject2 == 'v' || mapObject2 == 'n') {
+		switch (mapObject) {
+		case 'z':
+			weapon[HG].resetMagazine++;
+			break;
+		case 'x':
+			weapon[AR].resetMagazine++;
+			break;
+		case 'c':
+			weapon[SG].resetMagazine++;
+			break;
+		case 'v':
+			weapon[SR].resetMagazine++;
+			break;
+		case 'n':
+			userHP++;
+			break;
+		}
+		switch (mapObject2) {
+		case 'z':
+			weapon[HG].resetMagazine++;
+			break;
+		case 'x':
+			weapon[AR].resetMagazine++;
+			break;
+		case 'c':
+			weapon[SG].resetMagazine++;
+			break;
+		case 'v':
+			weapon[SR].resetMagazine++;
+			break;
+		case 'n':
+			userHP++;
+			break;
+		}
+
+		tempMap[*y][*x] = '0';
+		tempMap[*y-1][*x] = '0';
+		tempMap[*y + _y][*x + _x] = 'p';
+		tempMap[*y + _y - 1][*x + _x] = 'P';
+		*x += _x;
+		*y += _y;
+		return TRUE;
+	}
+	//피격시 체력감소
+	else if (mapObject == 'q' || mapObject == 'e' || mapObject == 'r' || mapObject == 't') {
+		userHP--;
+		if (userHP <= 0)
+			gameLoop = 0;
+		return TRUE;
+	}
+	else if (mapObject2 == 'q' || mapObject2 == 'e' || mapObject2 == 'r' || mapObject2 == 't') {
+		userHP -= 2;
+		if (userHP <= 0)
+			gameLoop = 0;
 		return TRUE;
 	}
 	return FALSE;
@@ -121,172 +172,36 @@ void userData(int* x, int* y) {
 	}
 }
 
-void drawInfo() {
-	gotoxy(10, 24);
-	printscr("현재무기: ");
-	switch (selectWeapon) {
-	case HG:
-		printscr("HG");
-		break;
-	case AR:
-		printscr("AR");
-		break;
-	case SG:
-		printscr("SG");
-		break;
-	case SR:
-		printscr("SR");
-		break;
-	}
-
-	gotoxy(10, 25);
-	printscr("남은 총알: ");
-	int weaponBullet = weapon[selectWeapon].bullet;
-
-	char* weaponBullet_char = (char*)malloc(sizeof(char) * 4);
-	_itoa(weaponBullet, weaponBullet_char, 10);
-	printscr(weaponBullet_char);
-}
-
-//전체 맵 그리기
-void drawMap(int* x, int* y)
-{
-	//뒷장 페이지 초기화
-	scr_clear();
-	//테두리 그리기
-	border();
-	drawInfo();
-	gotoxy(MAPXSTART, 1);
-	//플레이어 기준 x값 최소, 최대 | y값 최소 최대 결정
-	int hLow, hHigh, wLow, wHigh;
-
-	//위, 아래, 왼쪽, 오른쪽 끝으로 갔을때 작아진 부분만큼 반대쪽 맵 크기 늘리기
-	int hUpDif = 0, hDownDif = 0, wLeftDif = 0, wRightDif = 0;
-	int i = 1;
-
-	//맵의 최소, 최대값 설정
-	if (*y - MAPYHALF < 0) {
-		hLow = 0;
-		hUpDif = 0 - (*y - MAPYHALF);
-	}
-	else
-		hLow = *y - MAPYHALF;
-
-	if (*y + MAPYHALF > MAPYMAX) {
-		hHigh = MAPYMAX;
-		hDownDif = (*y + MAPYHALF) - MAPYMAX;
-		hLow = hLow - hDownDif;
-	}
-	else
-		hHigh = *y + MAPYHALF + hUpDif;
-
-	if (*x - MAPXHALF < 0) {
-		wLow = 0;
-		wLeftDif = 0 - (*x - MAPXHALF);
-	}
-	else
-		wLow = *x - MAPXHALF;
-
-	if (*x + MAPXHALF > MAPXMAX) {
-		wHigh = MAPXMAX;
-		wRightDif = (*x + MAPXHALF) - MAPXMAX;
-		wLow = wLow - wRightDif;
-	}
-	else
-		wHigh = *x + MAPXHALF + wLeftDif;
-
-	//맵 그리기
-	for (int h = hLow; h <= hHigh; h++) {
-		for (int w = wLow; w <= wHigh; w++) {
-			char temp = tempMap[h][w];
-			if (temp == '0') {
-				printscr("  ");
-			}
-			else if (temp == '1') {
-				printscr("■");
-			}
-			else if (temp == 'p') {
-				*x = w;
-				*y = h;
-				printscr("☆");
-			}
-			//가로총알
-			else if (temp == 'w') {
-				printscr("─");
-			}
-			//세로총알
-			else if (temp == 'h') {
-				printscr("│");
-			}
-			//샷건
-			else if (temp == 's') {
-				printscr("⊙");
-			}
-			//몬스터
-			else if (temp == 'q') {
-				printscr("◆");
-			}
-			else if (temp == 't') {
-				printscr("◇");
-			}
-			else if (temp == 'e') {
-				printscr("▲");
-			}
-			else if (temp == 'r') {
-				printscr("△");
-			}
-		}
-		i++;
-		gotoxy(MAPXSTART, i);
-	}
-
-	//뒷장, 앞장 전환
-	scr_switch();
-}
-
-void spawnMonster() {
-	while (TRUE) {
-		if (monsterCount == MAXMONSTER)
-			break;
-
-		mon[monsterCount].x = rand() % MAPXMAX;
-		mon[monsterCount].y = rand() % MAPYMAX;
-		if (tempMap[mon[monsterCount].y][mon[monsterCount].x] == '0') {
-			if (monsterCount % 4 == 0) {
-				tempMap[mon[monsterCount].y][mon[monsterCount].x] = 'q';
-				mon[monsterCount].hp = 100;
-			}
-			else if (monsterCount % 4 == 1) {
-				tempMap[mon[monsterCount].y][mon[monsterCount].x] = 't';
-				mon[monsterCount].hp = 200;
-			}
-			else if (monsterCount % 4 == 2) {
-				tempMap[mon[monsterCount].y][mon[monsterCount].x] = 'e';
-				mon[monsterCount].hp = 50;
-			}
-			else if (monsterCount % 4 == 3) {
-				tempMap[mon[monsterCount].y][mon[monsterCount].x] = 'r';
-				mon[monsterCount].hp = 80;
-			}
-			monsterCount++;
-			break;
-		}
-	}
-}
-
 void gameInit() {
 
-	weapon[HG].bullet = 100;
+	weapon[HG].bullet = 15;
 	weapon[HG].damage = HGDAMAGE;
+	weapon[HG].lastShootTime = 0;
+	weapon[HG].weaponSetTime = 1;
+	weapon[HG].resetMagazine = 1;
 
-	weapon[AR].bullet = 100;
+	weapon[AR].bullet = 30;
 	weapon[AR].damage = ARDAMAGE;
+	weapon[AR].lastShootTime = 0;
+	weapon[AR].weaponSetTime = 0;
+	weapon[AR].resetMagazine = 1;
 
-	weapon[SG].bullet = 100;
+	weapon[SG].bullet = 7;
 	weapon[SG].damage = SGDAMAGE;
+	weapon[SG].lastShootTime = 0;
+	weapon[SG].weaponSetTime = 1;
+	weapon[SG].resetMagazine = 1;
 
-	weapon[SR].bullet = 100;
+	weapon[SR].bullet = 5;
 	weapon[SR].damage = SRDAMAGE;
+	weapon[SR].lastShootTime = 0;
+	weapon[SR].weaponSetTime = 2;
+	weapon[SR].resetMagazine = 1;
+
+	magazine[HG].oneMagazine = 15;
+	magazine[AR].oneMagazine = 30;
+	magazine[SG].oneMagazine = 7;
+	magazine[SR].oneMagazine = 5;
 }
 
 void game() {
@@ -303,9 +218,10 @@ void game() {
 
 	gameInit();
 
-	while (1) {
+	while (gameLoop) {
 
 		runTime = time(NULL) - startTime;
+
 
 		//캐릭터 움직임에 변화가 있을시 맵 다시 그리기
 		if (changeData == TRUE)
@@ -313,7 +229,13 @@ void game() {
 
 		if (frameCount % monsterFrameSync == 0)
 			spawnMonster();
+		if (frameCount % magazineFrameSync == 0)
+			spawnMagazine();
+		if (frameCount % healthFrameSync == 0)
+			spawnHealth();
 		Sleep(delay);
+
+
 		frameCount++;
 
 		int keyData = keyControl();
@@ -334,32 +256,76 @@ void game() {
 			break;
 			//방향키로 공격
 		case UP:
-			attack(&x, &y, 0, -1, 'h');
-			drawMap(&x, &y);
-			Sleep(50);
-			endAttack(&x, &y, 0, -1, 'h');
-			drawMap(&x, &y);
+			if (weapon[selectWeapon].bullet <= 0) {
+				if (weapon[selectWeapon].resetMagazine > 0) {
+					weapon[selectWeapon].resetMagazine--;
+					weapon[selectWeapon].bullet = magazine[selectWeapon].oneMagazine;
+				}
+				else
+					break;
+			}
+			if (runTime - weapon[selectWeapon].lastShootTime >= weapon[selectWeapon].weaponSetTime) {
+				attack(&x, &y, 0, -1, 'h');
+				drawMap(&x, &y);
+				Sleep(50);
+				endAttack(&x, &y, 0, -1, 'h');
+				drawMap(&x, &y);
+				weapon[selectWeapon].lastShootTime = runTime;
+			}
 			break;
 		case DOWN:
-			attack(&x, &y, 0, 1, 'h');
-			drawMap(&x, &y);
-			Sleep(50);
-			endAttack(&x, &y, 0, 1, 'h');
-			drawMap(&x, &y);
+			if (weapon[selectWeapon].bullet <= 0) {
+				if (weapon[selectWeapon].resetMagazine > 0) {
+					weapon[selectWeapon].resetMagazine--;
+					weapon[selectWeapon].bullet = magazine[selectWeapon].oneMagazine;
+				}
+				else
+					break;
+			}
+			if (runTime - weapon[selectWeapon].lastShootTime >= weapon[selectWeapon].weaponSetTime) {
+				attack(&x, &y, 0, 1, 'h');
+				drawMap(&x, &y);
+				Sleep(50);
+				endAttack(&x, &y, 0, 1, 'h');
+				drawMap(&x, &y);
+				weapon[selectWeapon].lastShootTime = runTime;
+			}
 			break;
 		case LEFT:
-			attack(&x, &y, -1, 0, 'w');
-			drawMap(&x, &y);
-			Sleep(50);
-			endAttack(&x, &y, -1, 0, 'w');
-			drawMap(&x, &y);
+			if (weapon[selectWeapon].bullet <= 0) {
+				if (weapon[selectWeapon].resetMagazine > 0) {
+					weapon[selectWeapon].resetMagazine--;
+					weapon[selectWeapon].bullet = magazine[selectWeapon].oneMagazine;
+				}
+				else
+					break;
+			}
+			if (runTime - weapon[selectWeapon].lastShootTime >= weapon[selectWeapon].weaponSetTime) {
+				attack(&x, &y, -1, 0, 'w');
+				drawMap(&x, &y);
+				Sleep(50);
+				endAttack(&x, &y, -1, 0, 'w');
+				drawMap(&x, &y);
+				weapon[selectWeapon].lastShootTime = runTime;
+			}
 			break;
 		case RIGHT:
-			attack(&x, &y, 1, 0, 'w');
-			drawMap(&x, &y);
-			Sleep(50);
-			endAttack(&x, &y, 1, 0, 'w');
-			drawMap(&x, &y);
+			if (weapon[selectWeapon].bullet <= 0) {
+				if (weapon[selectWeapon].resetMagazine > 0) {
+					weapon[selectWeapon].resetMagazine--;
+					weapon[selectWeapon].bullet = magazine[selectWeapon].oneMagazine;
+				}
+				else
+					break;
+			}
+			if (runTime - weapon[selectWeapon].lastShootTime >= weapon[selectWeapon].weaponSetTime) {
+				attack(&x, &y, 1, 0, 'w');
+				drawMap(&x, &y);
+				Sleep(50);
+				endAttack(&x, &y, 1, 0, 'w');
+				drawMap(&x, &y);
+				weapon[selectWeapon].lastShootTime = runTime;
+			}
 			break;
 		}
 

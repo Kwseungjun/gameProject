@@ -18,14 +18,18 @@ int frameCount;
 int delay;
 int monsterFrameSync;
 int monsterCount;
+int magazineCount;
+int healthCount;
+int startTime;
+int maxHP;
+int userHP;
+int gameLoop;
 
 int move(int* x, int* y, int _x, int _y);
 int keyControl();
-void drawMap(int* x, int* y);
-void game();
 void userData(int* x, int* y);
 void gameInit();
-void drawInfo();
+void game();
 
 MONSTER mon[MAXMONSTER];
 

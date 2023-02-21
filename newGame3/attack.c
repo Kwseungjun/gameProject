@@ -12,6 +12,7 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 	//장애물을 만날때까지 총알이 날아감
 	if (selectWeapon == HG || selectWeapon == AR || selectWeapon == SR) {
 		while (TRUE) {
+			//몬스터 피격시 체력 감소 및 총알 관통 금지
 			if (tempMap[yData][xData] == 'q'|| tempMap[yData][xData] == 't' || tempMap[yData][xData] == 'e' || tempMap[yData][xData] == 'r') {
 				for (int i = 0; i < MAXMONSTER; i++) {
 					if (mon[i].x == xData && mon[i].y == yData) {
@@ -24,13 +25,19 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 				}
 			}
 
-			if (tempMap[yData][xData] != '0')
+			if (tempMap[yData][xData] == 'z' || tempMap[yData][xData] == 'x' || tempMap[yData][xData] == 'c' || tempMap[yData][xData] == 'v' || tempMap[yData][xData] == 'P') {
+				yData += _y;
+				xData += _x;
+				mapObject = tempMap[yData][xData];
+			}
+			else if (tempMap[yData][xData] == '0') {
+				tempMap[yData][xData] = wh;
+				yData += _y;
+				xData += _x;
+				mapObject = tempMap[yData][xData];
+			}
+			else
 				break;
-
-			tempMap[yData][xData] = wh;
-			yData += _y;
-			xData += _x;
-			mapObject = tempMap[yData][xData];
 		}
 	}
 	//샷건 탄퍼짐 구현
@@ -59,6 +66,7 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 				if (tempMap[yData][xData] == '0') {
 					tempMap[yData][xData] = 's';
 				}
+				else if (tempMap[yData][xData] == 'z' || tempMap[yData][xData] == 'x' || tempMap[yData][xData] == 'c' || tempMap[yData][xData] == 'v' || tempMap[yData][xData] == 'P');
 				else
 					isEmptyPlace = FALSE;
 				if (_x != 0) {
@@ -83,6 +91,7 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 			case 2:
 				if (tempMap[yData][xData] == '0')
 					tempMap[yData][xData] = 's';
+				else if (tempMap[yData][xData] == 'z' || tempMap[yData][xData] == 'x' || tempMap[yData][xData] == 'c' || tempMap[yData][xData] == 'v' || tempMap[yData][xData] == 'P');
 				else
 					isEmptyPlace = FALSE;
 				if (_x != 0)
@@ -126,12 +135,19 @@ void endAttack(int* x, int* y, int _x, int _y, char wh) {
 	//HG, AR 지우기
 	if (selectWeapon == HG || selectWeapon == AR || selectWeapon == SR) {
 		while (TRUE) {
-			if (tempMap[yData][xData] != wh)
+			if (tempMap[yData][xData] == wh) {
+				tempMap[yData][xData] = '0';
+				yData += _y;
+				xData += _x;
+				mapObject = tempMap[yData][xData];
+			}
+			else if (tempMap[yData][xData] == 'z' || tempMap[yData][xData] == 'x' || tempMap[yData][xData] == 'c' || tempMap[yData][xData] == 'v' || tempMap[yData][xData] == 'P') {
+				yData += _y;
+				xData += _x;
+				mapObject = tempMap[yData][xData];
+			}
+			else
 				break;
-			tempMap[yData][xData] = '0';
-			yData += _y;
-			xData += _x;
-			mapObject = tempMap[yData][xData];
 		}
 	}
 	//샷건 지우기

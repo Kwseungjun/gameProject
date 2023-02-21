@@ -4,11 +4,12 @@
 #include "main.h"
 #include "map.h"
 #include "menu.h"
+#include "game.h"
 
 void init()
 {
 	//창 사이즈 조절
-	system("mode con cols=105 lines=30 | title Game Title");
+	system("mode con cols=150 lines=40 | title Game Title");
 	scr_init();
 }
 
@@ -19,7 +20,7 @@ int main(void) {
 
 	while (TRUE) {
  		int userChoice = menuChoice();
-
+		gameLoop = TRUE;
 		switch (userChoice) {
 		case 0:
 			//게임시작

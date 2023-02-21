@@ -15,9 +15,20 @@
 typedef struct {
 	int bullet;
 	int damage;
+	int magazine;
+
+	int lastShootTime;
+	int weaponSetTime;
+	int resetMagazine;
 } WEAPON;
 
+typedef struct {
+
+	int oneMagazine;
+} MAGAZINE;
+
 WEAPON weapon[WEAPONCOUNT];
+MAGAZINE magazine[WEAPONCOUNT];
 int selectWeapon;
 
 void attack(int* x, int* y, int _x, int _y, char wh);

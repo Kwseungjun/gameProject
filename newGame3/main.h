@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #ifndef __STDIO_H_
 
 #define __STDIO_H_

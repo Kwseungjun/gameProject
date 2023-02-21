@@ -38,6 +38,20 @@ void title(int x, int y, int choice) {
 	else if (choice == 1)
 		mapMenu(x, y);
 }
+//메뉴 키 컨트롤(khbit 없음)
+int keyMenuControl()
+{
+	char temp = _getch();
+
+	if (temp == 'w' || temp == 'W')
+		return UP2;
+	else if (temp == 's' || temp == 'S')
+		return DOWN2;
+	else if (temp == ESC)
+		exit(1);
+	else if (temp == ' ')
+		return SUBMIT;
+}
 
 //w,s로 위, 아래 조종후 스페이스바로 선택
 int menuControl(int keyData, int* x, int* y) {
@@ -103,6 +117,7 @@ int menuChoice() {
 	}
 }
 
+//맵 선택 함수
 int mapChoice() {
 	int x = 36;
 	int y = 14;
