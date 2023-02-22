@@ -17,7 +17,7 @@ void spawnMonster() {
 		if (tempMap[mon[monsterCount].y][mon[monsterCount].x] == '0') {
 			if (monsterCount % 4 == 0) {
 				tempMap[mon[monsterCount].y][mon[monsterCount].x] = 'q';
-				mon[monsterCount].hp = 100;
+				mon[monsterCount].hp = 30;
 				mon[monsterCount].typeFrame = DIAMOND;
 			}
 			else if (monsterCount % 4 == 1) {
@@ -27,12 +27,12 @@ void spawnMonster() {
 			}
 			else if (monsterCount % 4 == 2) {
 				tempMap[mon[monsterCount].y][mon[monsterCount].x] = 'e';
-				mon[monsterCount].hp = 50;
+				mon[monsterCount].hp = 40;
 				mon[monsterCount].typeFrame = TRIANGLE;
 			}
 			else if (monsterCount % 4 == 3) {
 				tempMap[mon[monsterCount].y][mon[monsterCount].x] = 'r';
-				mon[monsterCount].hp = 80;
+				mon[monsterCount].hp = 60;
 				mon[monsterCount].typeFrame = EMPTYTRIANGLE;
 			}
 

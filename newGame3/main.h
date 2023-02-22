@@ -40,6 +40,7 @@
 #define __DEINFE_DATA
 #define TRUE 1
 #define FALSE 0
+#define REMOVING 2
 #define SUBMIT 4
 
 #endif

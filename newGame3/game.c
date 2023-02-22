@@ -12,9 +12,6 @@ int monsterFrameSync = 100;
 int healthFrameSync = 1000;
 int monsterMoveFrameSync = 10;
 int reloadFrameSync = 100;
-int magazineCount = 0;
-int monsterCount = 0;
-int healthCount = 0;
 int startTime;
 int maxHP = 5;
 int userHP = 5;
@@ -66,8 +63,11 @@ int keyControl()
 		else if (temp == '4') {
 			selectWeapon = SR;
 		}
+		else if (temp == '5') {
+			selectWeapon = BR;
+		}
 		else if (temp == 'e' || temp == 'E') {
-			if (selectWeapon == SR) {
+			if (selectWeapon == BR) {
 				selectWeapon = HG;
 			}
 			else {
@@ -89,17 +89,17 @@ int move(int* x, int* y, int _x, int _y)
 	//이동할 장소에 장애물이 있는지 확인
 	if ((mapObject == '0' && mapObject2 == '0') || (mapObject == 'P' && mapObject2 == '0') || (mapObject == '0' && mapObject2 == 'p')) {
 		tempMap[*y][*x] = '0';
-		tempMap[*y-1][*x] = '0';
+		tempMap[*y - 1][*x] = '0';
 		tempMap[*y + _y][*x + _x] = 'p';
 		tempMap[*y + _y - 1][*x + _x] = 'P';
 		*x += _x;
 		*y += _y;
 		return TRUE;
 	}
-	else if (mapObject == 'z' || mapObject == 'x' || mapObject == 'c' || mapObject == 'v' || mapObject == 'n' || mapObject2 == 'z' || mapObject2 == 'x' || mapObject2 == 'c' || mapObject2 == 'v' || mapObject2 == 'n') {
+	else if (((mapObject == 'z' || mapObject == 'x' || mapObject == 'c' || mapObject == 'v' || mapObject == 'n') && (mapObject2 == '0' || mapObject2 == 'p')) || ((mapObject == 'n' || mapObject2 == 'z' || mapObject2 == 'x' || mapObject2 == 'c' || mapObject2 == 'v' || mapObject2 == 'n') && (mapObject == '0' || mapObject == 'P'))) {
 		switch (mapObject) {
 		case 'z':
-			weapon[HG].magazine++;
+			weapon[BR].bullet += 5;
 			break;
 		case 'x':
 			weapon[AR].magazine++;
@@ -116,7 +116,7 @@ int move(int* x, int* y, int _x, int _y)
 		}
 		switch (mapObject2) {
 		case 'z':
-			weapon[HG].magazine++;
+			weapon[BR].bullet += 5;
 			break;
 		case 'x':
 			weapon[AR].magazine++;
@@ -128,7 +128,8 @@ int move(int* x, int* y, int _x, int _y)
 			weapon[SR].magazine++;
 			break;
 		case 'n':
-			userHP++;
+			if (userHP < maxHP)
+				userHP++;
 			break;
 		}
 
@@ -140,28 +141,13 @@ int move(int* x, int* y, int _x, int _y)
 		*y += _y;
 		return TRUE;
 	}
-	//피격시 체력감소
-	/*
-	else if (mapObject == 'q' || mapObject == 'e' || mapObject == 'r' || mapObject == 't') {
-		userHP--;
-		if (userHP <= 0)
-			gameLoop = 0;
-		return TRUE;
-	}
-	else if (mapObject2 == 'q' || mapObject2 == 'e' || mapObject2 == 'r' || mapObject2 == 't') {
-		userHP -= 2;
-		if (userHP <= 0)
-			gameLoop = 0;
-		return TRUE;
-	}
-	*/
 	return FALSE;
 }
 
 //게임 시작시 플레이어 위치 가져오는 함수
 void userData(int* x, int* y) {
-	for (int h = 0; h < 20; h++) {
-		for (int w = 0; w < 99; w++) {
+	for (int h = 0; h < MAPYMAX + 1; h++) {
+		for (int w = 0; w < MAPXMAX + 1; w++) {
 			if (tempMap[h][w] == 'p') {
 				*x = w;
 				*y = h;
@@ -253,13 +239,36 @@ void monsterMove(int* x, int* y) {
 	}
 }
 
+void wallSearch() {
+	int wallnum = 0;
+	for (int h = 0; h < MAPYMAX + 1; h++) {
+		for (int w = 0; w < MAPXMAX + 1; w++) {
+			if (tempMap[h][w] == '!') {
+				wall[wallnum].x = w;
+				wall[wallnum].y = h;
+				wall[wallnum].hp = 100;
+				wallnum++;
+			}
+		}
+	}
+}
+
 void gameInit() {
+	wallSearch();
+
+	magazineCount = 0;
+	monsterCount = 0;
+	healthCount = 0;
+	barrelCount = 0;
+	selectWeapon = 0;
+
+	memset(mon, 0, sizeof(mon));
 
 	weapon[HG].bullet = 15;
 	weapon[HG].damage = HGDAMAGE;
 	weapon[HG].lastShootTime = 0;
 	weapon[HG].weaponSetTime = 1;
-	weapon[HG].magazine = 1;
+	weapon[HG].magazine = 100;
 
 	weapon[AR].bullet = 30;
 	weapon[AR].damage = ARDAMAGE;
@@ -270,19 +279,26 @@ void gameInit() {
 	weapon[SG].bullet = 7;
 	weapon[SG].damage = SGDAMAGE;
 	weapon[SG].lastShootTime = 0;
-	weapon[SG].weaponSetTime = 1;
+	weapon[SG].weaponSetTime = 2;
 	weapon[SG].magazine = 1;
 
 	weapon[SR].bullet = 5;
 	weapon[SR].damage = SRDAMAGE;
 	weapon[SR].lastShootTime = 0;
-	weapon[SR].weaponSetTime = 2;
+	weapon[SR].weaponSetTime = 3;
 	weapon[SR].magazine = 1;
+
+	weapon[BR].bullet = 20;
+	weapon[BR].damage = BRDAMAGE;
+	weapon[BR].lastShootTime = 0;
+	weapon[BR].weaponSetTime = 0;
+	weapon[BR].magazine = 0;
 
 	magazine[HG].oneMagazine = 15;
 	magazine[AR].oneMagazine = 30;
 	magazine[SG].oneMagazine = 7;
 	magazine[SR].oneMagazine = 5;
+	magazine[BR].oneMagazine = 100;
 }
 
 void game() {
@@ -324,7 +340,7 @@ void game() {
 
 		drawMap(&x, &y);
 
-		frameCount++;
+		frameCount+=2;
 
 		int keyData = keyControl();
 

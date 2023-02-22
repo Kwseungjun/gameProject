@@ -4,6 +4,8 @@
 
 #define ATTACK 4
 #define MAXMONSTER 30
+#define MAXWALL 30
+#define MAXBARREL 800
 #define HGINTERVAL 1
 #define SGINTERVAL 2
 #define SRINTERVAL 3
@@ -15,6 +17,19 @@ typedef struct {
 	int typeFrame;
 } MONSTER;
 
+typedef struct {
+	int x, y;
+	int hp;
+} WALL;
+
+typedef struct {
+	int x, y;
+	int hp;
+	int exist;
+
+	struct BARREL* next;
+} BARREL;
+
 int frameCount;
 int delay;
 int magazineFrameSync;
@@ -25,6 +40,7 @@ int reloadFrameSync;
 int monsterCount;
 int magazineCount;
 int healthCount;
+int barrelCount;
 int startTime;
 int maxHP;
 int userHP;
@@ -39,5 +55,7 @@ void gameInit();
 void game();
 
 MONSTER mon[MAXMONSTER];
+WALL wall[MAXWALL];
+BARREL bar[MAXBARREL];
 
 #endif

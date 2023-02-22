@@ -6,11 +6,13 @@
 #define AR 1
 #define SG 2
 #define SR 3
-#define HGDAMAGE 10
-#define ARDAMAGE 5
-#define SGDAMAGE 30
+#define BR 4
+#define HGDAMAGE 15
+#define ARDAMAGE 10
+#define SGDAMAGE 50
 #define SRDAMAGE 100
-#define WEAPONCOUNT 4
+#define BRDAMAGE 300
+#define WEAPONCOUNT 5
 
 typedef struct {
 	int bullet;
@@ -31,6 +33,8 @@ WEAPON weapon[WEAPONCOUNT];
 MAGAZINE magazine[WEAPONCOUNT];
 int selectWeapon;
 
+void isBarrelExplode();
+void removeBarrelExplode();
 void attack(int* x, int* y, int _x, int _y, char wh);
 void endAttack(int* x, int* y, int _x, int _y, char wh);
 
