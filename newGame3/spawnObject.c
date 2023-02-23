@@ -13,13 +13,30 @@ void spawnMonster() {
 	while (TRUE) {
 		if (monsterCount == MAXMONSTER)
 			break;
-
-		mon[monsterCount].x = (rand(time(NULL)) % 8) + 47;
-		mon[monsterCount].y = rand(time(NULL)) % 2;
-		if (mon[monsterCount].y == 0)
-			mon[monsterCount].y = 1;
-		else
-			mon[monsterCount].y = MAPYMAX - 1;
+		if (userStage == 1) {
+			mon[monsterCount].x = (rand(time(NULL)) % 8) + 47;
+			mon[monsterCount].y = rand(time(NULL)) % 2;
+			if (mon[monsterCount].y == 0)
+				mon[monsterCount].y = 1;
+			else
+				mon[monsterCount].y = tempMapY - 1;
+		}
+		else if (userStage == 2) {
+			mon[monsterCount].x = (rand(time(NULL)) % 8) + 31;
+			mon[monsterCount].y = rand(time(NULL)) % 2;
+			if (mon[monsterCount].y == 0)
+				mon[monsterCount].y = 5;
+			else
+				mon[monsterCount].y = tempMapY - 5;
+		}
+		else if (userStage == 3) {
+			mon[monsterCount].x = (rand(time(NULL)) % 8) + 200;
+			mon[monsterCount].y = rand(time(NULL)) % 2;
+			if (mon[monsterCount].y == 0)
+				mon[monsterCount].y = 1;
+			else
+				mon[monsterCount].y = tempMapY;
+		}
 		if (tempMap[mon[monsterCount].y][mon[monsterCount].x] == '0') {
 			if (monsterCount % 4 == 0) {
 				tempMap[mon[monsterCount].y][mon[monsterCount].x] = 'q';
@@ -52,8 +69,8 @@ void spawnMonster() {
 
 void spawnMagazine() {
 	while (TRUE) {
-		int x = rand(time(NULL)) % MAPXMAX;
-		int y = rand(time(NULL)) % MAPYMAX;
+		int x = rand(time(NULL)) % tempMapX;
+		int y = rand(time(NULL)) % tempMapY;
 
 		if (tempMap[y][x] == '0') {
 			if (magazineCount % 4 == 0) {
@@ -76,8 +93,8 @@ void spawnMagazine() {
 
 void spawnHealth() {
 	while (TRUE) {
-		int x = rand(time(NULL)) % MAPXMAX;
-		int y = rand(time(NULL)) % MAPYMAX;
+		int x = rand(time(NULL)) % tempMapX;
+		int y = rand(time(NULL)) % tempMapY;
 
 		if (tempMap[y][x] == '0') {
 			tempMap[y][x] = 'n';

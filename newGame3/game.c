@@ -157,8 +157,8 @@ int move(int* x, int* y, int _x, int _y)
 
 //게임 시작시 플레이어 위치 가져오는 함수
 void userData(int* x, int* y) {
-	for (int h = 0; h < MAPYMAX + 1; h++) {
-		for (int w = 0; w < MAPXMAX + 1; w++) {
+	for (int h = 0; h < tempMapY + 1; h++) {
+		for (int w = 0; w < tempMapX + 1; w++) {
 			if (tempMap[h][w] == 'p') {
 				*x = w;
 				*y = h;
@@ -171,8 +171,8 @@ void userData(int* x, int* y) {
 
 void wallSearch() {
 	int wallnum = 0;
-	for (int h = 0; h < MAPYMAX + 1; h++) {
-		for (int w = 0; w < MAPXMAX + 1; w++) {
+	for (int h = 0; h < tempMapY + 2; h++) {
+		for (int w = 0; w < tempMapX + 2; w++) {
 			if (tempMap[h][w] == '!') {
 				wall[wallnum].x = w;
 				wall[wallnum].y = h;
@@ -186,15 +186,36 @@ void wallSearch() {
 void gameInit() {
 	switch (userStage) {
 	case 1:
-		memcpy(tempMap, map1, sizeof(tempMap));
+		tempMapX = MAP1XMAX;
+		tempMapY = MAP1YMAX;
+		memset(tempMap, 0, sizeof(tempMap));
+		for (int y = 0; y < MAP1YMAX+1; y++) {
+			for (int x = 0; x < MAP1XMAX+1; x++) {
+				tempMap[y][x] = map1[y][x];
+			}
+		}
 		break;
 	case 2:
-		memcpy(tempMap, map2, sizeof(tempMap));
+		tempMapX = MAP2XMAX;
+		tempMapY = MAP2YMAX;
+		memset(tempMap, 0, sizeof(tempMap));
+		for (int y = 0; y < MAP2YMAX+1; y++) {
+			for (int x = 0; x < MAP2XMAX+1; x++) {
+				tempMap[y][x] = map2[y][x];
+			}
+		}
 		maxHP++;
 		userHP = maxHP;
 		break;
 	case 3:
-		memcpy(tempMap, map3, sizeof(tempMap));
+		tempMapX = MAP3XMAX;
+		tempMapY = MAP3YMAX;
+		memset(tempMap, 0, sizeof(tempMap));
+		for (int y = 0; y < MAP3YMAX+1; y++) {
+			for (int x = 0; x < MAP3XMAX+1; x++) {
+				tempMap[y][x] = map3[y][x];
+			}
+		}
 		maxHP += 2;
 		userHP = maxHP;
 		break;

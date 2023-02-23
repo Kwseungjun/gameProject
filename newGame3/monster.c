@@ -2,7 +2,7 @@
 #include "main.h"
 #include "map.h"
 
-int monsterFrameSync = 100;
+int monsterFrameSync = 30;
 int monsterMoveFrameSync = 10;
 int remainMonsterCount = 0;
 int monsterCount = 0;

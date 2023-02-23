@@ -3,8 +3,8 @@
 #define _GAME_H
 
 #define ATTACK 4
-#define MAXMONSTER 5
-#define MAXWALL 30
+#define MAXMONSTER 50
+#define MAXWALL 800
 #define MAXBARREL 800
 #define HGINTERVAL 1
 #define SGINTERVAL 2

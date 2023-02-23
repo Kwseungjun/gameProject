@@ -11,7 +11,7 @@ int userStage = 1;
 void init()
 {
 	//창 사이즈 조절
-	system("mode con cols=125 lines=37 | title Game Title");
+	system("mode con cols=140 lines=43 | title Game Title");
 	scr_init();
 }
 
@@ -35,7 +35,7 @@ int main(void) {
 
 		case 2:
 			//옵션
-
+			how();
 			break;
 
 		case 4:

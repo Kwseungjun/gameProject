@@ -1,7 +1,7 @@
 #ifndef _ASCIIART_H
 
 #define _ASCIIART_H
-#define XMIN 20
+#define XMIN 27
 #define YMIN 8
 
 void stage(int x, int y, int type);

@@ -141,3 +141,50 @@ int mapChoice() {
 		scr_switch();
 	}
 }
+
+void how() {
+	scr_clear();
+	gotoxy(0, 3);
+	printscr("      W             \n");
+	printscr("    A   D  WASD를 통해 캐릭터를 움직입니다.        \n");
+	printscr("      S                                                       \n");
+
+	gotoxy(0, 7); printscr("       △");
+	gotoxy(0, 8); printscr("     ◁□▷      방향기를 통해 조준 및 발사합니다");
+	gotoxy(0, 9); printscr("       ▽");
+
+	gotoxy(65, 2); printscr("① ② ③ ④ ⑤를 통해 무기를 바꿉니다.");
+	gotoxy(65, 3); printscr("E 버튼을 통해 다음 무기로 넘어갑니다.");
+
+	gotoxy(65, 6); printscr("①은 HG");
+	gotoxy(65, 7); printscr("②은 AR");
+	gotoxy(65, 8); printscr("③은 SG");
+	gotoxy(65, 9); printscr("③은 RF");
+	gotoxy(65, 10); printscr("⑤은 길목에 설치 후 공격해 폭발시킬 수 있습니다.");
+
+
+	gotoxy(5, 18); printscr("▲(50)   ");
+	gotoxy(5, 20); printscr("△(80)   ");
+	gotoxy(5, 22); printscr("◆(100)");
+	gotoxy(5, 24); printscr("◇(200)");
+
+	gotoxy(10, 28); printscr("EP 1 The Escape");
+	gotoxy(10, 30); printscr("EP 2 No Parking");
+
+
+	gotoxy(60, 19); printscr("                            ▲");
+	gotoxy(60, 20); printscr("        ⊙           ▲        △");
+	gotoxy(60, 21); printscr("      ⊙⊙                           ◆");
+	gotoxy(60, 22); printscr("○  ⊙⊙⊙    ▲               △");
+	gotoxy(60, 23); printscr("☆⊙⊙⊙⊙         △               ◆      ◇");
+	gotoxy(60, 24); printscr("    ⊙⊙⊙                ▲");
+	gotoxy(60, 25); printscr("      ⊙⊙            △        △");
+	gotoxy(60, 26); printscr("        ⊙          ▲                   ◆");
+	gotoxy(60, 27); printscr("                         ▲                   ▲");
+
+
+
+
+	scr_switch();
+	_getch();
+}
