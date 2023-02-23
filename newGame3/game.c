@@ -4,19 +4,22 @@
 #include "map.h"
 #include "attack.h"
 #include "spawnObject.h"
+#include "asciiArt.h"
+#include "monster.h"
 
+//게임시작
+int gameLoop = 1;
+//속도 관련 변수
 int frameCount = 0;
 int delay = 10;
-int magazineFrameSync = 500;
-int monsterFrameSync = 100;
-int healthFrameSync = 1000;
-int monsterMoveFrameSync = 10;
-int reloadFrameSync = 100;
 int startTime;
+int runTime, startTime;
+//플레이어 체력 변수
 int maxHP = 5;
 int userHP = 5;
-int gameLoop = 1;
-int isReload = FALSE;
+//피격시 무적시간 변수
+int isBarrier = FALSE;
+int barrierStartTime = 0;
 
 MONSTER mon[MAXMONSTER];
 
@@ -72,6 +75,14 @@ int keyControl()
 			}
 			else {
 				selectWeapon++;
+			}
+		}
+		else if (temp == 'q' || temp == 'Q') {
+			if (selectWeapon == HG) {
+				selectWeapon = BR;
+			}
+			else {
+				selectWeapon--;
 			}
 		}
 		else if (temp == ESC)
@@ -157,87 +168,6 @@ void userData(int* x, int* y) {
 	}
 }
 
-void monsterMove(int* x, int* y) {
-	int count = 0;
-	int xDifferenceValue, yDifferenceValue;
-	while (count < monsterCount) {
-		if (frameCount % mon[count].typeFrame == 0) {
-			if (mon[count].exist == TRUE) {
-
-				xDifferenceValue = *x - mon[count].x;
-				yDifferenceValue = *y - mon[count].y;
-
-				if (abs(xDifferenceValue) > abs(yDifferenceValue)) {
-
-					if (tempMap[mon[count].y][mon[count].x + 1] == 'P' || tempMap[mon[count].y][mon[count].x - 1] == 'P') {
-						userHP -= 2;
-						if (userHP <= 0)
-							gameLoop = FALSE;
-					}
-					else if (tempMap[mon[count].y][mon[count].x + 1] == 'p' || tempMap[mon[count].y][mon[count].x - 1] == 'p') {
-						userHP--;
-						if (userHP <= 0)
-							gameLoop = FALSE;
-					}
-					else if (xDifferenceValue > 0 && tempMap[mon[count].y][mon[count].x + 1] == '0') {
-						tempMap[mon[count].y][mon[count].x + 1] = tempMap[mon[count].y][mon[count].x];
-						tempMap[mon[count].y][mon[count].x] = '0';
-						mon[count].x++;
-					}
-					else if (xDifferenceValue <= 0 && tempMap[mon[count].y][mon[count].x - 1] == '0') {
-						tempMap[mon[count].y][mon[count].x - 1] = tempMap[mon[count].y][mon[count].x];
-						tempMap[mon[count].y][mon[count].x] = '0';
-						mon[count].x--;
-					}
-					else if (yDifferenceValue > 0 && tempMap[mon[count].y + 1][mon[count].x] == '0') {
-						tempMap[mon[count].y + 1][mon[count].x] = tempMap[mon[count].y][mon[count].x];
-						tempMap[mon[count].y][mon[count].x] = '0';
-						mon[count].y++;
-					}
-					else if (yDifferenceValue <= 0 && tempMap[mon[count].y - 1][mon[count].x] == '0') {
-						tempMap[mon[count].y - 1][mon[count].x] = tempMap[mon[count].y][mon[count].x];
-						tempMap[mon[count].y][mon[count].x] = '0';
-						mon[count].y--;
-					}
-				}
-
-				else {
-					if (tempMap[mon[count].y + 1][mon[count].x] == 'P' || tempMap[mon[count].y - 1][mon[count].x] == 'P') {
-						userHP -= 2;
-						if (userHP <= 0)
-							gameLoop = FALSE;
-					}
-					else if (tempMap[mon[count].y + 1][mon[count].x] == 'p' || tempMap[mon[count].y - 1][mon[count].x] == 'p') {
-						userHP--;
-						if (userHP <= 0)
-							gameLoop = FALSE;
-					}
-					else if (yDifferenceValue > 0 && tempMap[mon[count].y + 1][mon[count].x] == '0') {
-						tempMap[mon[count].y + 1][mon[count].x] = tempMap[mon[count].y][mon[count].x];
-						tempMap[mon[count].y][mon[count].x] = '0';
-						mon[count].y++;
-					}
-					else if (yDifferenceValue <= 0 && tempMap[mon[count].y - 1][mon[count].x] == '0') {
-						tempMap[mon[count].y - 1][mon[count].x] = tempMap[mon[count].y][mon[count].x];
-						tempMap[mon[count].y][mon[count].x] = '0';
-						mon[count].y--;
-					}
-					else if (xDifferenceValue > 0 && tempMap[mon[count].y][mon[count].x + 1] == '0') {
-						tempMap[mon[count].y][mon[count].x + 1] = tempMap[mon[count].y][mon[count].x];
-						tempMap[mon[count].y][mon[count].x] = '0';
-						mon[count].x++;
-					}
-					else if (xDifferenceValue <= 0 && tempMap[mon[count].y][mon[count].x - 1] == '0') {
-						tempMap[mon[count].y][mon[count].x - 1] = tempMap[mon[count].y][mon[count].x];
-						tempMap[mon[count].y][mon[count].x] = '0';
-						mon[count].x--;
-					}
-				}
-			}
-		}
-		count++;
-	}
-}
 
 void wallSearch() {
 	int wallnum = 0;
@@ -254,7 +184,21 @@ void wallSearch() {
 }
 
 void gameInit() {
-	wallSearch();
+	switch (userStage) {
+	case 1:
+		memcpy(tempMap, map1, sizeof(tempMap));
+		break;
+	case 2:
+		memcpy(tempMap, map2, sizeof(tempMap));
+		maxHP++;
+		userHP = maxHP;
+		break;
+	case 3:
+		memcpy(tempMap, map3, sizeof(tempMap));
+		maxHP += 2;
+		userHP = maxHP;
+		break;
+	}
 
 	magazineCount = 0;
 	monsterCount = 0;
@@ -263,6 +207,10 @@ void gameInit() {
 	selectWeapon = 0;
 
 	memset(mon, 0, sizeof(mon));
+	memset(wall, 0, sizeof(wall));
+	memset(bar, 0, sizeof(bar));
+
+	wallSearch();
 
 	weapon[HG].bullet = 15;
 	weapon[HG].damage = HGDAMAGE;
@@ -306,7 +254,8 @@ void game() {
 	int x;
 	int y;
 	int changeData = TRUE;
-	int runTime, startTime;
+	
+	printStart(userStage);
 
 	startTime = time(NULL);
 
@@ -319,10 +268,7 @@ void game() {
 
 		runTime = time(NULL) - startTime;
 
-
-		//캐릭터 움직임에 변화가 있을시 맵 다시 그리기
-		//if (changeData == TRUE)
-			
+		checkMonsterBug();
 
 		if (frameCount % monsterFrameSync == 0)
 			spawnMonster();
@@ -332,7 +278,12 @@ void game() {
 			spawnHealth();
 		if (frameCount % monsterMoveFrameSync == 0)
 			monsterMove(&x, &y);
-
+		if (isMonsterRemain() == FALSE&&monsterCount==MAXMONSTER) {
+			gameLoop = FALSE;
+			printClear(userStage);
+			userStage++;
+			break;
+		}
 		if (runTime - weapon[selectWeapon].reload > weapon[selectWeapon].weaponSetTime + 1)
 			isReload = FALSE;
 

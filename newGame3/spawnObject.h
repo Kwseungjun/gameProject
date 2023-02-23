@@ -7,6 +7,11 @@
 #define TRIANGLE 20
 #define EMPTYTRIANGLE 30
 
+int magazineFrameSync;
+int healthFrameSync;
+int magazineCount;
+int healthCount;
+
 void spawnMonster();
 void spawnMagazine();
 void spawnHealth();

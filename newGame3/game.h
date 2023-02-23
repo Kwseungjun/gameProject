@@ -3,7 +3,7 @@
 #define _GAME_H
 
 #define ATTACK 4
-#define MAXMONSTER 30
+#define MAXMONSTER 5
 #define MAXWALL 30
 #define MAXBARREL 800
 #define HGINTERVAL 1
@@ -26,31 +26,26 @@ typedef struct {
 	int x, y;
 	int hp;
 	int exist;
-
-	struct BARREL* next;
 } BARREL;
 
+//게임시작
+int gameLoop;
+//속도 관련 변수
 int frameCount;
 int delay;
-int magazineFrameSync;
-int monsterFrameSync;
-int healthFrameSync;
-int monsterMoveFrameSync;
-int reloadFrameSync;
-int monsterCount;
-int magazineCount;
-int healthCount;
-int barrelCount;
 int startTime;
+int runTime, startTime;
+//플레이어 체력 변수
 int maxHP;
 int userHP;
-int gameLoop;
-int isReload;
+//피격시 무적시간 변수
+int isBarrier;
+int barrierStartTime;
 
-int move(int* x, int* y, int _x, int _y);
 int keyControl();
+int move(int* x, int* y, int _x, int _y);
 void userData(int* x, int* y);
-void monsterMove(int* x, int* y);
+void wallSearch();
 void gameInit();
 void game();
 

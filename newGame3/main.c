@@ -6,10 +6,12 @@
 #include "menu.h"
 #include "game.h"
 
+int userStage = 1;
+
 void init()
 {
 	//창 사이즈 조절
-	system("mode con cols=150 lines=40 | title Game Title");
+	system("mode con cols=125 lines=37 | title Game Title");
 	scr_init();
 }
 
@@ -25,27 +27,9 @@ int main(void) {
 		switch (userChoice) {
 		case 0:
 			//게임시작
-			switch (mapChoice()) {
-			case 0:
-				//MAP1
-				memcpy(tempMap, map1, sizeof(tempMap));
+			while (userStage < 4) {
+				gameLoop = TRUE;
 				game();
-				break;
-
-			case 2:
-				//MAP2
-				memcpy(tempMap, map2, sizeof(tempMap));
-				game();
-				break;
-
-			case 4:
-				//MAP3
-				memcpy(tempMap, map3, sizeof(tempMap));
-				game();
-				break;
-
-			default:
-				break;
 			}
 			break;
 

@@ -31,7 +31,11 @@ typedef struct {
 
 WEAPON weapon[WEAPONCOUNT];
 MAGAZINE magazine[WEAPONCOUNT];
+
 int selectWeapon;
+int reloadFrameSync;
+int isReload;
+int barrelCount;
 
 void isBarrelExplode();
 void removeBarrelExplode();

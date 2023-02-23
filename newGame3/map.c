@@ -2,44 +2,39 @@
 #include "game.h"
 #include "attack.h"
 #include "displayControl.h"
+#include "monster.h"
 
 //忙式忖弛戌戎
 
 void border() {
 	gotoxy(0, 0);
-	printscr("        忙式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式忖\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        弛                                                                                                                          弛\n");
-	printscr("        戌式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式戎");
+	printscr("        忙式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式忖\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        弛                                                                                                      弛\n");
+	printscr("        戌式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式戎");
 
 }
 
@@ -226,20 +221,25 @@ void drawMap(int* x, int* y)
 	for (int h = hLow; h <= hHigh; h++) {
 		for (int w = wLow; w <= wHigh; w++) {
 			char temp = tempMap[h][w];
+			//綴夠
 			if (temp == '0') {
 				printscr("  ");
 			}
+			//跨蝶攪 蝶ア雖羲
 			else if (temp == 'o') {
 				printscr("  ");
 			}
+			//漁1
 			else if (temp == '1') {
 				printscr("﹥");
 			}
+			//Ы溯檜橫 該葬
 			else if (temp == 'P') {
 				*x = w;
 				*y = h;
 				printscr("∞");
 			}
+			//Ы溯檜橫 跺鱔
 			else if (temp == 'p') {
 				*x = w;
 				*y = h;
@@ -253,7 +253,7 @@ void drawMap(int* x, int* y)
 			else if (temp == 'h') {
 				printscr("弛");
 			}
-			//憐勒
+			//憐勒識憲
 			else if (temp == 's') {
 				printscr("Ⅸ");
 			}
@@ -270,27 +270,35 @@ void drawMap(int* x, int* y)
 			else if (temp == 'r') {
 				printscr("﹦");
 			}
+			//寡歇 嬴檜蠱
 			else if (temp == 'z') {
 				printscr("BR");
 			}
+			//AR 驕璽
 			else if (temp == 'x') {
 				printscr("AR");
 			}
+			//SG 驕璽
 			else if (temp == 'c') {
 				printscr("SG");
 			}
+			//SR 驕璽
 			else if (temp == 'v') {
 				printscr("SR");
 			}
+			//羹溘 �蛹� 嬴檜蠱
 			else if (temp == 'n') {
 				printscr("Ⅵ");
 			}
+			//睡憮雖朝 漁
 			else if (temp == '!') {
 				printscr("十");
 			}
+			//寡歇
 			else if (temp == 'k') {
 				printscr("〩");
 			}
+			//寡歇 ァ嫦 賅暮
 			else if (temp == 'K') {
 				printscr("〡");
 			}
@@ -304,7 +312,26 @@ void drawMap(int* x, int* y)
 }
 
 void drawInfo() {
-	gotoxy(10, 33);
+	//羹溘 轎溘
+	gotoxy(10, 28);
+	printscr("羹溘 : ");
+	for (int i = 0; i < maxHP; i++) {
+		if (i < userHP)
+			printscr("Ⅵ");
+		else
+			printscr("Ⅴ");
+	}
+
+	//陴擎 跨蝶攪
+	gotoxy(10, 30);
+	printscr("陴擎 瞳 : ");
+	int remainMonster = remainMonsterCount;
+	char* remainMonster_char = (char*)malloc(sizeof(char) * 4);
+	_itoa(remainMonster, remainMonster_char, 10);
+	printscr(remainMonster_char);
+
+	//⑷營 鼠晦轎溘
+	gotoxy(10, 32);
 	printscr("⑷營鼠晦: ");
 	switch (selectWeapon) {
 	case HG:
@@ -323,7 +350,7 @@ void drawInfo() {
 		printscr("寡歇");
 		break;
 	}
-
+	//陴擎識憲, 驕璽 轎溘
 	gotoxy(10, 34);
 	printscr("陴擎 識憲 : ");
 	int weaponBullet = weapon[selectWeapon].bullet;
@@ -338,16 +365,9 @@ void drawInfo() {
 	_itoa(weaponMagazine, weaponMagazine_char, 10);
 	printscr(weaponMagazine_char);
 
-	gotoxy(10, 35);
+	//營濰瞪 轎溘
+	gotoxy(10, 36);
 	if (isReload == TRUE)
 		printscr("營濰瞪醞...");
 
-	gotoxy(10, 36);
-	printscr("陴擎羹溘 : ");
-	for (int i = 0; i < maxHP; i++) {
-		if (i < userHP)
-			printscr("Ⅵ");
-		else
-			printscr("Ⅴ");
-	}
 }

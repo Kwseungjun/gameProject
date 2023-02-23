@@ -43,4 +43,6 @@
 #define REMOVING 2
 #define SUBMIT 4
 
+int userStage;
+
 #endif

@@ -1,8 +1,12 @@
 #include "map.h"
 #include "game.h"
 #include "attack.h"
+#include "monster.h"
 
 int selectWeapon = 0;
+int reloadFrameSync = 100;
+int isReload = FALSE;
+int barrelCount = 0;
 
 int isDamage(int xData, int yData, char type, int isBarrel) {
 	switch (type) {
@@ -19,6 +23,7 @@ int isDamage(int xData, int yData, char type, int isBarrel) {
 				if (mon[i].hp <= 0) {
 					tempMap[yData][xData] = '0';
 					mon[i].exist = FALSE;
+					remainMonsterCount--;
 					return TRUE;
 				}
 				return FALSE;
@@ -120,6 +125,7 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 		while (TRUE) {
 			//몬스터 피격시 체력 감소 및 총알 관통 금지
 			if (tempMap[yData][xData] == 'q'|| tempMap[yData][xData] == 't' || tempMap[yData][xData] == 'e' || tempMap[yData][xData] == 'r') {
+				//스나이퍼 총알관통
 				if (selectWeapon == SR) {
 					isDamage(xData, yData, 'm', FALSE);
 					xData += _x;
@@ -151,7 +157,7 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 				break;
 			}
 
-			else if (tempMap[yData][xData] == 'z' || tempMap[yData][xData] == 'x' || tempMap[yData][xData] == 'c' || tempMap[yData][xData] == 'v' || tempMap[yData][xData] == 'P') {
+			else if (tempMap[yData][xData] == 'z' || tempMap[yData][xData] == 'x' || tempMap[yData][xData] == 'c' || tempMap[yData][xData] == 'v' || tempMap[yData][xData] == 'P' || tempMap[yData][xData] == 'n') {
 				yData += _y;
 				xData += _x;
 				mapObject = tempMap[yData][xData];
@@ -170,7 +176,7 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 	else if (selectWeapon == SG) {
 		int isEmptyPlace = TRUE;
 
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < 16; i++) {
 
 			if (tempMap[yData][xData] == 'q' || tempMap[yData][xData] == 't' || tempMap[yData][xData] == 'e' || tempMap[yData][xData] == 'r') {
 				isDamage(xData, yData, 'm', FALSE);
@@ -240,7 +246,7 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 				}
 				break;
 
-			case 4: case 5: case 6: case 7: case 8:
+			case 4: case 5: case 6: case 7:
 				if (tempMap[yData][xData] == '0')
 					tempMap[yData][xData] = 's';
 
@@ -250,6 +256,27 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 					xData++;
 				break;
 
+			case 8:
+				if (tempMap[yData][xData] == '0')
+					tempMap[yData][xData] = 's';
+				if (_x != 0) {
+					yData -= 5;
+					xData += _x;
+				}
+				else {
+					xData -= 5;
+					yData += _y;
+				}
+				break;
+			case 9:case 10:case 11:case 12:case 13:case 14:case 15:
+				if (tempMap[yData][xData] == '0')
+					tempMap[yData][xData] = 's';
+
+				if (_x != 0)
+					yData++;
+				else
+					xData++;
+				break;
 			}
 		}
 	}
@@ -281,11 +308,6 @@ void endAttack(int* x, int* y, int _x, int _y, char wh) {
 				yData += _y;
 				xData += _x;
 				mapObject = tempMap[yData][xData];
-				if (selectWeapon == SR && (mapObject == 'q' || mapObject == 'e' || mapObject == 'r' || mapObject == 't' || mapObject == '0')) {
-					yData += _y;
-					xData += _x;
-					mapObject = tempMap[yData][xData];
-				}
 			}
 			else if (tempMap[yData][xData] == 'z' || tempMap[yData][xData] == 'x' || tempMap[yData][xData] == 'c' || tempMap[yData][xData] == 'v' || tempMap[yData][xData] == 'P' || tempMap[yData][xData] == 'n') {
 				yData += _y;
@@ -300,13 +322,18 @@ void endAttack(int* x, int* y, int _x, int _y, char wh) {
 			else if (tempMap[yData][xData] == 'k'|| tempMap[yData][xData] == 'K') {
 				removeBarrelExplode();
 			}
+			else if (selectWeapon == SR && (mapObject == 'q' || mapObject == 'e' || mapObject == 'r' || mapObject == 't' || mapObject == '0')) {
+				yData += _y;
+				xData += _x;
+				mapObject = tempMap[yData][xData];
+			}
 			else
 				break;
 		}
 	}
 	//샷건 지우기
 	else if (selectWeapon == SG) {
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < 16; i++) {
 			if (tempMap[yData][xData] == 'k' || tempMap[yData][xData] == 'K') {
 				removeBarrelExplode();
 			}
@@ -348,7 +375,28 @@ void endAttack(int* x, int* y, int _x, int _y, char wh) {
 				}
 				break;
 
-			case 4: case 5: case 6: case 7: case 8:
+			case 4: case 5: case 6: case 7:
+				if (tempMap[yData][xData] == 's')
+					tempMap[yData][xData] = '0';
+
+				if (_x != 0)
+					yData++;
+				else
+					xData++;
+				break;
+			case 8:
+				if (tempMap[yData][xData] == 's')
+					tempMap[yData][xData] = '0';
+				if (_x != 0) {
+					yData -= 5;
+					xData += _x;
+				}
+				else {
+					xData -= 5;
+					yData += _y;
+				}
+				break;
+			case 9:case 10:case 11:case 12:case 13:case 14:case 15:
 				if (tempMap[yData][xData] == 's')
 					tempMap[yData][xData] = '0';
 

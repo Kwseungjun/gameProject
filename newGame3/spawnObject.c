@@ -2,6 +2,12 @@
 #include "map.h"
 #include "attack.h"
 #include "game.h"
+#include "monster.h"
+
+int magazineFrameSync = 500;
+int healthFrameSync = 1000;
+int magazineCount = 0;
+int healthCount = 0;
 
 void spawnMonster() {
 	while (TRUE) {
@@ -38,6 +44,7 @@ void spawnMonster() {
 
 			mon[monsterCount].exist = TRUE;
 			monsterCount++;
+			remainMonsterCount++;
 			break;
 		}
 	}
