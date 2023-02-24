@@ -6,9 +6,12 @@
 #include "spawnObject.h"
 #include "asciiArt.h"
 #include "monster.h"
+#include "menu.h"
+
 
 //게임시작
 int gameLoop = 1;
+int isRetry = TRUE;
 //속도 관련 변수
 int frameCount = 0;
 int delay = 10;
@@ -20,6 +23,8 @@ int userHP = 5;
 //피격시 무적시간 변수
 int isBarrier = FALSE;
 int barrierStartTime = 0;
+
+int stageMaxMonster = 50;
 
 MONSTER mon[MAXMONSTER];
 
@@ -94,6 +99,7 @@ int keyControl()
 
 int move(int* x, int* y, int _x, int _y)
 {
+
 	char mapObject = tempMap[*y + _y][*x + _x];
 	char mapObject2 = tempMap[*y + _y - 1][*x + _x];
 
@@ -110,35 +116,46 @@ int move(int* x, int* y, int _x, int _y)
 	else if (((mapObject == 'z' || mapObject == 'x' || mapObject == 'c' || mapObject == 'v' || mapObject == 'n') && (mapObject2 == '0' || mapObject2 == 'p')) || ((mapObject == 'n' || mapObject2 == 'z' || mapObject2 == 'x' || mapObject2 == 'c' || mapObject2 == 'v' || mapObject2 == 'n') && (mapObject == '0' || mapObject == 'P'))) {
 		switch (mapObject) {
 		case 'z':
+			PlaySound(TEXT("item.wav"), 0, SND_FILENAME | SND_ASYNC);
 			weapon[BR].bullet += 5;
 			break;
 		case 'x':
+			PlaySound(TEXT("item.wav"), 0, SND_FILENAME | SND_ASYNC);
 			weapon[AR].magazine++;
 			break;
 		case 'c':
+			PlaySound(TEXT("item.wav"), 0, SND_FILENAME | SND_ASYNC);
 			weapon[SG].magazine++;
 			break;
 		case 'v':
+			PlaySound(TEXT("item.wav"), 0, SND_FILENAME | SND_ASYNC);
 			weapon[SR].magazine++;
 			break;
 		case 'n':
-			userHP++;
+			PlaySound(TEXT("health.wav"), 0, SND_FILENAME | SND_ASYNC);
+			if (userHP < maxHP)
+				userHP++;
 			break;
 		}
 		switch (mapObject2) {
 		case 'z':
+			PlaySound(TEXT("item.wav"), 0, SND_FILENAME | SND_ASYNC);
 			weapon[BR].bullet += 5;
 			break;
 		case 'x':
+			PlaySound(TEXT("item.wav"), 0, SND_FILENAME | SND_ASYNC);
 			weapon[AR].magazine++;
 			break;
 		case 'c':
+			PlaySound(TEXT("item.wav"), 0, SND_FILENAME | SND_ASYNC);
 			weapon[SG].magazine++;
 			break;
 		case 'v':
+			PlaySound(TEXT("item.wav"), 0, SND_FILENAME | SND_ASYNC);
 			weapon[SR].magazine++;
 			break;
 		case 'n':
+			PlaySound(TEXT("health.wav"), 0, SND_FILENAME | SND_ASYNC);
 			if (userHP < maxHP)
 				userHP++;
 			break;
@@ -168,6 +185,14 @@ void userData(int* x, int* y) {
 	}
 }
 
+void isUserDie() {
+	if (userHP <= 0) {
+		PlaySound(TEXT("gameover.wav"), 0, SND_FILENAME | SND_ASYNC);
+		printGameOver();
+		retryMenu();
+		gameLoop = FALSE;
+	}
+}
 
 void wallSearch() {
 	int wallnum = 0;
@@ -183,7 +208,7 @@ void wallSearch() {
 	}
 }
 
-void gameInit() {
+void gameInit(int* x, int* y) {
 	switch (userStage) {
 	case 1:
 		tempMapX = MAP1XMAX;
@@ -194,6 +219,8 @@ void gameInit() {
 				tempMap[y][x] = map1[y][x];
 			}
 		}
+		maxHP = 5;
+		stageMaxMonster = 2;
 		break;
 	case 2:
 		tempMapX = MAP2XMAX;
@@ -205,7 +232,7 @@ void gameInit() {
 			}
 		}
 		maxHP++;
-		userHP = maxHP;
+		stageMaxMonster = 0;
 		break;
 	case 3:
 		tempMapX = MAP3XMAX;
@@ -217,15 +244,20 @@ void gameInit() {
 			}
 		}
 		maxHP += 2;
-		userHP = maxHP;
+		stageMaxMonster = 0;
 		break;
 	}
+	userHP = maxHP;
 
+	userData(x, y);
+
+	remainMonsterCount = 0;
 	magazineCount = 0;
 	monsterCount = 0;
 	healthCount = 0;
 	barrelCount = 0;
 	selectWeapon = 0;
+	isBarrier = FALSE;
 
 	memset(mon, 0, sizeof(mon));
 	memset(wall, 0, sizeof(wall));
@@ -238,30 +270,35 @@ void gameInit() {
 	weapon[HG].lastShootTime = 0;
 	weapon[HG].weaponSetTime = 1;
 	weapon[HG].magazine = 100;
+	weapon[HG].soundFile = "HG.wav";
 
 	weapon[AR].bullet = 30;
 	weapon[AR].damage = ARDAMAGE;
 	weapon[AR].lastShootTime = 0;
 	weapon[AR].weaponSetTime = 0;
 	weapon[AR].magazine = 1;
+	weapon[AR].soundFile = "AR.wav";
 
 	weapon[SG].bullet = 7;
 	weapon[SG].damage = SGDAMAGE;
 	weapon[SG].lastShootTime = 0;
 	weapon[SG].weaponSetTime = 2;
 	weapon[SG].magazine = 1;
+	weapon[SG].soundFile = "SG.wav";
 
 	weapon[SR].bullet = 5;
 	weapon[SR].damage = SRDAMAGE;
 	weapon[SR].lastShootTime = 0;
 	weapon[SR].weaponSetTime = 3;
 	weapon[SR].magazine = 1;
+	weapon[SR].soundFile = "SR.wav";
 
 	weapon[BR].bullet = 20;
 	weapon[BR].damage = BRDAMAGE;
 	weapon[BR].lastShootTime = 0;
 	weapon[BR].weaponSetTime = 0;
 	weapon[BR].magazine = 0;
+	weapon[BR].soundFile = "BR.wav";
 
 	magazine[HG].oneMagazine = 15;
 	magazine[AR].oneMagazine = 30;
@@ -270,26 +307,43 @@ void gameInit() {
 	magazine[BR].oneMagazine = 100;
 }
 
+void printSound() {
+	switch (selectWeapon) {
+	case HG:
+		PlaySound(TEXT("HG.wav"), 0, SND_FILENAME | SND_ASYNC);
+		break;
+	case AR:
+		PlaySound(TEXT("AR.wav"), 0, SND_FILENAME | SND_ASYNC);
+		break;
+	case SG:
+		PlaySound(TEXT("SG.wav"), 0, SND_FILENAME | SND_ASYNC);
+		break;
+	case SR:
+		PlaySound(TEXT("SR.wav"), 0, SND_FILENAME | SND_ASYNC);
+		break;
+	}
+}
+
 void game() {
 
 	int x;
 	int y;
 	int changeData = TRUE;
-	
+
+	PlaySound(TEXT("gamestart.wav"), 0, SND_FILENAME | SND_ASYNC);
 	printStart(userStage);
 
 	startTime = time(NULL);
 
 	//게임 시작시 플레이어 위치 가져오기
-	userData(&x, &y);
 
-	gameInit();
+	gameInit(&x, &y);
 
 	while (gameLoop) {
-
 		runTime = time(NULL) - startTime;
 
 		checkMonsterBug();
+		isUserDie();
 
 		if (frameCount % monsterFrameSync == 0)
 			spawnMonster();
@@ -299,7 +353,8 @@ void game() {
 			spawnHealth();
 		if (frameCount % monsterMoveFrameSync == 0)
 			monsterMove(&x, &y);
-		if (isMonsterRemain() == FALSE&&monsterCount==MAXMONSTER) {
+		if (isMonsterRemain() == FALSE && monsterCount == stageMaxMonster) {
+			PlaySound(TEXT("gameclear.wav"), 0, SND_FILENAME | SND_ASYNC);
 			gameLoop = FALSE;
 			printClear(userStage);
 			userStage++;
@@ -307,7 +362,6 @@ void game() {
 		}
 		if (runTime - weapon[selectWeapon].reload > weapon[selectWeapon].weaponSetTime + 1)
 			isReload = FALSE;
-
 		Sleep(delay);
 
 		drawMap(&x, &y);
@@ -341,13 +395,16 @@ void game() {
 					break;
 			}
 			if (runTime - weapon[selectWeapon].lastShootTime >= weapon[selectWeapon].weaponSetTime) {
+				printSound();
 				attack(&x, &y, 0, -1, 'h');
 				drawMap(&x, &y);
 				Sleep(50);
 				endAttack(&x, &y, 0, -1, 'h');
 				drawMap(&x, &y);
+				
 				weapon[selectWeapon].lastShootTime = runTime;
 				if (weapon[selectWeapon].bullet == 0) {
+					PlaySound(TEXT("reload.wav"), 0, SND_FILENAME | SND_ASYNC);
 					weapon[selectWeapon].reload = runTime;
 					isReload = TRUE;
 				}
@@ -363,6 +420,7 @@ void game() {
 					break;
 			}
 			if (runTime - weapon[selectWeapon].lastShootTime >= weapon[selectWeapon].weaponSetTime) {
+				printSound();
 				attack(&x, &y, 0, 1, 'h');
 				drawMap(&x, &y);
 				Sleep(50);
@@ -370,6 +428,7 @@ void game() {
 				drawMap(&x, &y);
 				weapon[selectWeapon].lastShootTime = runTime;
 				if (weapon[selectWeapon].bullet == 0) {
+					PlaySound(TEXT("reload.wav"), 0, SND_FILENAME | SND_ASYNC);
 					weapon[selectWeapon].reload = runTime;
 					isReload = TRUE;
 				}
@@ -385,6 +444,7 @@ void game() {
 					break;
 			}
 			if (runTime - weapon[selectWeapon].lastShootTime >= weapon[selectWeapon].weaponSetTime) {
+				printSound();
 				attack(&x, &y, -1, 0, 'w');
 				drawMap(&x, &y);
 				Sleep(50);
@@ -392,6 +452,7 @@ void game() {
 				drawMap(&x, &y);
 				weapon[selectWeapon].lastShootTime = runTime;
 				if (weapon[selectWeapon].bullet == 0) {
+					PlaySound(TEXT("reload.wav"), 0, SND_FILENAME | SND_ASYNC);
 					weapon[selectWeapon].reload = runTime;
 					isReload = TRUE;
 				}
@@ -407,6 +468,7 @@ void game() {
 					break;
 			}
 			if (runTime - weapon[selectWeapon].lastShootTime >= weapon[selectWeapon].weaponSetTime) {
+				printSound();
 				attack(&x, &y, 1, 0, 'w');
 				drawMap(&x, &y);
 				Sleep(50);
@@ -414,6 +476,7 @@ void game() {
 				drawMap(&x, &y);
 				weapon[selectWeapon].lastShootTime = runTime;
 				if (weapon[selectWeapon].bullet == 0) {
+					PlaySound(TEXT("reload.wav"), 0, SND_FILENAME | SND_ASYNC);
 					weapon[selectWeapon].reload = runTime;
 					isReload = TRUE;
 				}

@@ -11,7 +11,7 @@ int barrelCount = 0;
 int isDamage(int xData, int yData, char type, int isBarrel) {
 	switch (type) {
 	case 'm':
-		for (int i = 0; i < MAXMONSTER; i++) {
+		for (int i = 0; i < stageMaxMonster; i++) {
 			if (mon[i].x == xData && mon[i].y == yData) {
 				if (isBarrel == TRUE) {
 					mon[i].hp -= BRDAMAGE;
@@ -67,6 +67,7 @@ void isBarrelExplode() {
 	int i = 0;
 	while (i < barrelCount) {
 		if (bar[i].exist == TRUE && bar[i].hp <= 0) {
+			PlaySound(TEXT("BR.wav"), 0, SND_FILENAME | SND_ASYNC);
 			bar[i].exist = REMOVING;
 			tempMap[bar[i].y][bar[i].x] = '0';
 			for (int j = -2; j <= 2; j++) {
@@ -77,13 +78,13 @@ void isBarrelExplode() {
 						break;
 					case 'p': case 'P':
 						userHP -= 1;
-						if (userHP <= 0)
-							gameLoop = FALSE;
+						//if (userHP <= 0)
+						//	gameLoop = FALSE;
 						break;
 					case '!':
 						isDamage(bar[i].x + k, bar[i].y + j, 'w', TRUE);
 						break;
-					case 'q':case 't':case 'e':case 'r':
+					case 'q':case 't':case 'e':case 'r':case 'Q':
 						isDamage(bar[i].x + k, bar[i].y + j, 'm', TRUE);
 						break;
 					case 'k':
@@ -124,7 +125,7 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 	if (selectWeapon == HG || selectWeapon == AR || selectWeapon == SR) {
 		while (TRUE) {
 			//몬스터 피격시 체력 감소 및 총알 관통 금지
-			if (tempMap[yData][xData] == 'q'|| tempMap[yData][xData] == 't' || tempMap[yData][xData] == 'e' || tempMap[yData][xData] == 'r') {
+			if (tempMap[yData][xData] == 'q'|| tempMap[yData][xData] == 't' || tempMap[yData][xData] == 'e' || tempMap[yData][xData] == 'r' || tempMap[yData][xData] == 'Q') {
 				//스나이퍼 총알관통
 				if (selectWeapon == SR) {
 					isDamage(xData, yData, 'm', FALSE);
@@ -178,7 +179,7 @@ void attack(int* x, int* y, int _x, int _y, char wh) {
 
 		for (int i = 0; i < 16; i++) {
 
-			if (tempMap[yData][xData] == 'q' || tempMap[yData][xData] == 't' || tempMap[yData][xData] == 'e' || tempMap[yData][xData] == 'r') {
+			if (tempMap[yData][xData] == 'q' || tempMap[yData][xData] == 't' || tempMap[yData][xData] == 'e' || tempMap[yData][xData] == 'r' || tempMap[yData][xData] == 'Q') {
 				isDamage(xData, yData, 'm', FALSE);
 			}
 			//부서지는 벽
@@ -322,7 +323,7 @@ void endAttack(int* x, int* y, int _x, int _y, char wh) {
 			else if (tempMap[yData][xData] == 'k'|| tempMap[yData][xData] == 'K') {
 				removeBarrelExplode();
 			}
-			else if (selectWeapon == SR && (mapObject == 'q' || mapObject == 'e' || mapObject == 'r' || mapObject == 't' || mapObject == '0')) {
+			else if (selectWeapon == SR && (mapObject == 'q' || mapObject == 'e' || mapObject == 'r' || mapObject == 't' || mapObject == '0' || mapObject == 'Q')) {
 				yData += _y;
 				xData += _x;
 				mapObject = tempMap[yData][xData];

@@ -2,10 +2,11 @@
 
 #define _SPAWNOBJECT_H
 
+#define DOUBLEDIAMOND 20
 #define DIAMOND 10
-#define EMPTYDIAMOND 40
-#define TRIANGLE 20
-#define EMPTYTRIANGLE 30
+#define EMPTYDIAMOND 25
+#define TRIANGLE 15
+#define EMPTYTRIANGLE 20
 
 int magazineFrameSync;
 int healthFrameSync;

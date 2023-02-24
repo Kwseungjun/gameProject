@@ -3,12 +3,13 @@
 #define _GAME_H
 
 #define ATTACK 4
-#define MAXMONSTER 50
+#define MAXMONSTER 150
 #define MAXWALL 800
 #define MAXBARREL 800
 #define HGINTERVAL 1
 #define SGINTERVAL 2
 #define SRINTERVAL 3
+
 
 typedef struct {
 	int x, y;
@@ -28,8 +29,12 @@ typedef struct {
 	int exist;
 } BARREL;
 
+
+int dwID;
+
 //게임시작
 int gameLoop;
+int isRetry;
 //속도 관련 변수
 int frameCount;
 int delay;
@@ -41,6 +46,8 @@ int userHP;
 //피격시 무적시간 변수
 int isBarrier;
 int barrierStartTime;
+//스테이지 최대 몬스터 수
+int stageMaxMonster;
 
 int keyControl();
 int move(int* x, int* y, int _x, int _y);

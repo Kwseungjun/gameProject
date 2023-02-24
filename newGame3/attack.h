@@ -11,7 +11,7 @@
 #define ARDAMAGE 10
 #define SGDAMAGE 50
 #define SRDAMAGE 100
-#define BRDAMAGE 300
+#define BRDAMAGE 200
 #define WEAPONCOUNT 5
 
 typedef struct {
@@ -22,6 +22,8 @@ typedef struct {
 	int lastShootTime;
 	int weaponSetTime;
 	int reload;
+
+	int soundFile;
 } WEAPON;
 
 typedef struct {

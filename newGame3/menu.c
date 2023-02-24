@@ -1,42 +1,131 @@
 #include "main.h"
 #include "displayControl.h"
+#include "asciiArt.h"
+#include "game.h"
 
 //처음 시작 메뉴
 void mainMenu(int x, int y) {
 	gotoxy(x, y);
-	printscr("Start");
+	printscr("시작");
 	gotoxy(x, y + 2);
-	printscr("Option");
+	printscr("설명");
 	gotoxy(x, y + 4);
-	printscr("Exit");
-}
-
-//맵 선택 메뉴
-void mapMenu(int x, int y) {
-	gotoxy(x, y);
-	printscr("Map1");
-	gotoxy(x, y + 2);
-	printscr("Map2");
-	gotoxy(x, y + 4);
-	printscr("Map3");
+	printscr("종료");
 }
 
 //타이틀
-void title(int x, int y, int choice) {
-	gotoxy(0, 5);
-	printscr("                      ########      ########       #######   \n");
-	printscr("                      ##     ##     ##     ##     ##         \n");
-	printscr("                      ##     ##     ##     ##    ##          \n");
-	printscr("                      ########      ########     ##          \n");
-	printscr("                      ## ###        ##           ##   ###### \n");
-	printscr("                      ##   ###      ##           ##     ##   \n");
-	printscr("                      ##     ##     ##            ##    ##   \n");
-	printscr("                      ##     ##     ##             #######   \n");
+void title(int x, int y) {
 
-	if (choice == 0)
-		mainMenu(x, y);
-	else if (choice == 1)
-		mapMenu(x, y);
+	gotoxy(66, 1); printscr("                            ■■■■■                              ");
+	gotoxy(66, 2); printscr("                          ■■■■■■■                            ");
+	gotoxy(66, 3); printscr("                    ■■■■■■■■■■■■■                      ");
+	gotoxy(66, 4); printscr("                    ■■■■■■■■■■■■■                      ");
+	gotoxy(66, 5); printscr("                        ■              ■                            ");
+	gotoxy(66, 6); printscr("                        ■              ■                            ");
+	gotoxy(66, 7); printscr("                        ■■          ■■                            ");
+	gotoxy(66, 8); printscr("        ■■    ■      ■■■■■■■■■                            ");
+	gotoxy(66, 9); printscr("        ■■■■          ■          ■                              ");
+	gotoxy(66, 10); printscr("          ■■■            ■■■■■                              ");
+	gotoxy(66, 11); printscr("            ■■■        ■          ■                            ");
+	gotoxy(66, 12); printscr("              ■■■  ■■              ■■■                      ");
+	gotoxy(66, 13); printscr("                ■■■                      ■■                    ");
+	gotoxy(66, 14); printscr("                ■■                          ■■■■■■■■■■■");
+	gotoxy(66, 15); printscr("            ■■■                              ■■■■■■        ");
+	gotoxy(66, 16); printscr("        ■■■■■                              ■■  ■  ■■■■  ");
+	gotoxy(66, 17); printscr("      ■    ■                                      ■■  ■■■■  ");
+	gotoxy(66, 18); printscr("    ■    ■■      ■■                ■■        ■■■■        ");
+	gotoxy(66, 19); printscr("  ■    ■  ■      ■  ■              ■  ■      ■              ");
+	gotoxy(66, 20); printscr("  ■  ■■■■    ■    ■              ■    ■    ■■            ");
+	gotoxy(66, 21); printscr("  ■■■  ■    ■■    ■              ■    ■■    ■            ");
+	gotoxy(66, 22); printscr("          ■    ■      ■              ■■    ■    ■            ");
+	gotoxy(66, 23); printscr("          ■    ■      ■              ■■■  ■    ■■■■■    ");
+	gotoxy(66, 24); printscr("          ■    ■      ■■■■■■■■■■■  ■    ■■■■■    ");
+	gotoxy(66, 25); printscr("          ■    ■      ■              ■■■■■    ■    ■■    ");
+	gotoxy(66, 26); printscr("          ■■■        ■      ■      ■  ■■  ■■■    ■■■  ");
+	gotoxy(66, 27); printscr("          ■■          ■    ■■■    ■  ■■    ■■  ■■■    ");
+	gotoxy(66, 28); printscr("    ■■■■■          ■  ■      ■  ■■■■■  ■■■■■■    ");
+	gotoxy(66, 29); printscr("    ■■■■■          ■  ■      ■  ■  ■■    ■■■■■■    ");
+	gotoxy(66, 30); printscr("    ■■                ■  ■        ■  ■                ■■    ");
+	gotoxy(66, 31); printscr("    ■■                ■  ■        ■  ■                ■■■  ");
+	gotoxy(66, 32); printscr("    ■■                ■  ■          ■  ■              ■■    ");
+	gotoxy(66, 33); printscr("                        ■  ■          ■  ■              ■      ");
+	gotoxy(66, 34); printscr("                        ■  ■        ■■■                        ");
+	gotoxy(66, 35); printscr("                        ■  ■      ■■■■■■■■■              ");
+	gotoxy(66, 36); printscr("                        ■  ■    ■  ■■■■    ■  ■            ");
+	gotoxy(66, 37); printscr("                        ■  ■    ■  ■          ■  ■            ");
+	gotoxy(66, 38); printscr("                      ■■■      ■  ■          ■  ■            ");
+	gotoxy(66, 39); printscr("                      ■■■        ■■■■■■■■■              ");
+
+/*
+		gotoxy(66, 1); printscr("□□□□□□□□□□□□□□■■■■■□□□□□□□□□□□□□□□");
+		gotoxy(66, 2); printscr("□□□□□□□□□□□□□■■■■■■■□□□□□□□□□□□□□□");
+		gotoxy(66, 3); printscr("□□□□□□□□□□■■■■■■■■■■■■■□□□□□□□□□□□");
+		gotoxy(66, 4); printscr("□□□□□□□□□□■■■■■■■■■■■■■□□□□□□□□□□□");
+		gotoxy(66, 5); printscr("□□□□□□□□□□□□■□□□□□□□■□□□□□□□□□□□□□□");
+		gotoxy(66, 6); printscr("□□□□□□□□□□□□■□□□□□□□■□□□□□□□□□□□□□□");
+		gotoxy(66, 7); printscr("□□□□□□□□□□□□■■□□□□□■■□□□□□□□□□□□□□□");
+		gotoxy(66, 8); printscr("□□□□■■□□■□□□■■■■■■■■■□□□□□□□□□□□□□□");
+		gotoxy(66, 9); printscr("□□□□■■■■□□□□□■□□□□□■□□□□□□□□□□□□□□□");
+		gotoxy(66, 10); printscr("□□□□□■■■□□□□□□■■■■■□□□□□□□□□□□□□□□");
+		gotoxy(66, 11); printscr("□□□□□□■■■□□□□■□□□□□■□□□□□□□□□□□□□□");
+		gotoxy(66, 12); printscr("□□□□□□□■■■□■■□□□□□□□■■■□□□□□□□□□□□");
+		gotoxy(66, 13); printscr("□□□□□□□□■■■□□□□□□□□□□□■■□□□□□□□□□□");
+		gotoxy(66, 14); printscr("□□□□□□□□■■□□□□□□□□□□□□□■■■■■■■■■■■");
+		gotoxy(66, 15); printscr("□□□□□□■■■□□□□□□□□□□□□□□□■■■■■■□□□□");
+		gotoxy(66, 16); printscr("□□□□■■■■■□□□□□□□□□□□□□□□■■□■□■■■■□");
+		gotoxy(66, 17); printscr("□□□■□□■□□□□□□□□□□□□□□□□□□□■■□■■■■□");
+		gotoxy(66, 18); printscr("□□■□□■■□□□■■□□□□□□□□■■□□□□■■■■□□□□");
+		gotoxy(66, 19); printscr("□■□□■□■□□□■□■□□□□□□□■□■□□□■□□□□□□□");
+		gotoxy(66, 20); printscr("□■□■■■■□□■□□■□□□□□□□■□□■□□■■□□□□□□");
+		gotoxy(66, 21); printscr("□■■■□■□□■■□□■□□□□□□□■□□■■□□■□□□□□□");
+		gotoxy(66, 22); printscr("□□□□□■□□■□□□■□□□□□□□■■□□■□□■□□□□□□");
+		gotoxy(66, 23); printscr("□□□□□■□□■□□□■□□□□□□□■■■□■□□■■■■■□□");
+		gotoxy(66, 24); printscr("□□□□□■□□■□□□■■■■■■■■■■■□■□□■■■■■□□");
+		gotoxy(66, 25); printscr("□□□□□■□□■□□□■□□□□□□□■■■■■□□■□□■■□□");
+		gotoxy(66, 26); printscr("□□□□□■■■□□□□■□□□■□□□■□■■□■■■□□■■■□");
+		gotoxy(66, 27); printscr("□□□□□■■□□□□□■□□■■■□□■□■■□□■■□■■■□□");
+		gotoxy(66, 28); printscr("□□■■■■■□□□□□■□■□□□■□■■■■■□■■■■■■□□");
+		gotoxy(66, 29); printscr("□□■■■■■□□□□□■□■□□□■□■□■■□□■■■■■■□□");
+		gotoxy(66, 30); printscr("□□■■□□□□□□□□■□■□□□□■□■□□□□□□□□■■□□");
+		gotoxy(66, 31); printscr("□□■■□□□□□□□□■□■□□□□■□■□□□□□□□□■■■□");
+		gotoxy(66, 32); printscr("□□■■□□□□□□□□■□■□□□□□■□■□□□□□□□■■□□");
+		gotoxy(66, 33); printscr("□□□□□□□□□□□□■□■□□□□□■□■□□□□□□□■□□□");
+		gotoxy(66, 34); printscr("□□□□□□□□□□□□■□■□□□□■■■□□□□□□□□□□□□");
+		gotoxy(66, 35); printscr("□□□□□□□□□□□□■□■□□□■■■■■■■■■□□□□□□□");
+		gotoxy(66, 36); printscr("□□□□□□□□□□□□■□■□□■□■■■■□□■□■□□□□□□");
+		gotoxy(66, 37); printscr("□□□□□□□□□□□□■□■□□■□■□□□□□■□■□□□□□□");
+		gotoxy(66, 38); printscr("□□□□□□□□□□□■■■□□□■□■□□□□□■□■□□□□□□");
+		gotoxy(66, 39); printscr("□□□□□□□□□□□■■■□□□□■■■■■■■■■□□□□□□□");
+*/
+
+	gotoxy(0, 0);
+	printscr("                                                              \n");
+	printscr("                                                              \n");
+	printscr("                                                              \n");
+	printscr("                                                              \n");
+
+
+	printscr("            ■■■■■                                        \n");
+	printscr("          ■■        ■                                      \n");
+	printscr("        ■■                                                  \n");
+	printscr("        ■■                    ■      ■      ■  ■■■    \n");
+	printscr("        ■■    ■■■■■■    ■      ■      ■■      ■  \n");
+	printscr("        ■■        ■■        ■      ■      ■        ■  \n");
+	printscr("          ■■      ■■        ■      ■      ■        ■  \n");
+	printscr("            ■■■■■■          ■■■  ■    ■        ■  \n");
+
+	printscr("                                                              \n");
+	printscr("                                                              \n");
+
+
+	printscr("  ■■■            ■  ■                                    \n");
+	printscr("■      ■          ■  ■                                    \n");
+	printscr("■            ■    ■  ■    ■■      ■■  ■      ■    ■  ■\n");
+	printscr("■          ■  ■  ■  ■  ■■■■  ■    ■■■  ■  ■  ■■\n");
+	printscr("■■    ■  ■  ■  ■  ■  ■        ■      ■    ■  ■  ■  \n");
+	printscr("  ■■■      ■    ■  ■    ■■      ■■  ■■    ■    ■  \n");
+
+	mainMenu(x, y);
 }
 //메뉴 키 컨트롤(khbit 없음)
 int keyMenuControl()
@@ -54,31 +143,31 @@ int keyMenuControl()
 }
 
 //w,s로 위, 아래 조종후 스페이스바로 선택
-int menuControl(int keyData, int* x, int* y) {
+int menuControl(int keyData, int* x, int* y, int yMin, int yMax) {
 	switch (keyData) {
 	case UP2:
-		if (*y > 14) {
+		if (*y > yMin) {
 			gotoxy(*x - 2, *y);
 			printscr(" ");
 			*y -= 2;
 			gotoxy(*x - 2, *y);
 			printscr(">");
 		}
-		else if (*y == 14) {
+		else if (*y == yMin) {
 			gotoxy(*x - 2, *y);
 			printscr(">");
 		}
 		break;
 
 	case DOWN2:
-		if (*y < 18) {
+		if (*y < yMax) {
 			gotoxy(*x - 2, *y);
 			printscr(" ");
 			*y += 2;
 			gotoxy(*x - 2, *y);
 			printscr(">");
 		}
-		else if (*y == 18) {
+		else if (*y == yMax) {
 			gotoxy(*x - 2, *y);
 			printscr(">");
 		}
@@ -88,19 +177,19 @@ int menuControl(int keyData, int* x, int* y) {
 		exit(1);
 
 	case SUBMIT:
-		return *y - 14;
+		return *y - yMin;
 	}
 }
 //메뉴선택 함수
 int menuChoice() {
 
-	int x = 36;
-	int y = 14;
+	int x = 30;
+	int y = 27;
 	int select;
 
 	scr_clear();
-	title(x, y, 0);
-	gotoxy(34, 14);
+	title(x, y);
+	gotoxy(28, 27);
 	printscr(">");
 	scr_switch();
 
@@ -108,39 +197,61 @@ int menuChoice() {
 		int keyData = keyMenuControl();
 
 		scr_clear();
-		title(36, 14, 0);
+		title(30, 27, 0);
 
-		select = menuControl(keyData, &x, &y);
+		select = menuControl(keyData, &x, &y, 27, 31);
 		if (select == 0 || select == 2 || select == 4)
 			return select;
 		scr_switch();
 	}
 }
 
-//맵 선택 함수
-int mapChoice() {
-	int x = 36;
-	int y = 14;
+int printRetry(int x, int y) {
+	g(XMIN, YMIN);
+	a(XMIN + 11, YMIN);
+	m(XMIN + 22, YMIN);
+	e(XMIN + 33, YMIN);
+	o(XMIN + 50, YMIN);
+	v(XMIN + 61, YMIN);
+	e(XMIN + 72, YMIN);
+	r(XMIN + 83, YMIN);
+
+	gotoxy(x, y); printscr("다시 시도");
+	gotoxy(x, y + 2); printscr("메인 메뉴");
+
+}
+
+int retryMenu() {
+
+	int x = 68;
+	int y = 26;
 	int select;
 
 	scr_clear();
-	title(x, y, 1);
-	gotoxy(34, 14);
+	printRetry(x, y);
+	gotoxy(x - 2, y);
 	printscr(">");
 	scr_switch();
-
+	
 	while (TRUE) {
 		int keyData = keyMenuControl();
 
 		scr_clear();
-		title(36, 14, 1);
+		printRetry(68,26);
 
-		select = menuControl(keyData, &x, &y);
-		if (select == 0 || select == 2 || select == 4)
+		select = menuControl(keyData, &x, &y, 26, 28);
+		if (select == 0) {
+			isRetry = TRUE;
 			return select;
+		}
+		else if (select == 2) {
+			isRetry = FALSE;
+			return select;
+		}
 		scr_switch();
 	}
 }
+
 
 void how() {
 	scr_clear();

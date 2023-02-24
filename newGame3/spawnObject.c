@@ -11,7 +11,7 @@ int healthCount = 0;
 
 void spawnMonster() {
 	while (TRUE) {
-		if (monsterCount == MAXMONSTER)
+		if (monsterCount == stageMaxMonster)
 			break;
 		if (userStage == 1) {
 			mon[monsterCount].x = (rand(time(NULL)) % 8) + 47;
@@ -38,7 +38,12 @@ void spawnMonster() {
 				mon[monsterCount].y = tempMapY;
 		}
 		if (tempMap[mon[monsterCount].y][mon[monsterCount].x] == '0') {
-			if (monsterCount % 4 == 0) {
+			if (monsterCount == stageMaxMonster - 1) {
+				tempMap[mon[monsterCount].y][mon[monsterCount].x] = 'Q';
+				mon[monsterCount].hp = 1000;
+				mon[monsterCount].typeFrame = DOUBLEDIAMOND;
+			}
+			else if (monsterCount % 4 == 0) {
 				tempMap[mon[monsterCount].y][mon[monsterCount].x] = 'q';
 				mon[monsterCount].hp = 30;
 				mon[monsterCount].typeFrame = DIAMOND;

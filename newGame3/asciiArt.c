@@ -51,6 +51,108 @@ void third(int x, int y) {
 	textcolor(WHITE, BLACK);
 }
 
+void you(int x, int y) {
+	textcolor(BLUE1, BLACK);
+	gotoxy(x, y);     printscr("##    ##  #######  ##     ## ");
+	gotoxy(x, y + 1); printscr(" ##  ##  ##     ## ##     ## ");
+	gotoxy(x, y + 2); printscr("  ####   ##     ## ##     ## ");
+	gotoxy(x, y + 3); printscr("   ##    ##     ## ##     ## ");
+	gotoxy(x, y + 4); printscr("   ##    ##     ## ##     ## ");
+	gotoxy(x, y + 5); printscr("   ##    ##     ## ##     ## ");
+	gotoxy(x, y + 6); printscr("   ##     #######   #######  ");
+	textcolor(WHITE, BLACK);
+}
+
+void win(int x, int y) {
+	textcolor(YELLOW1, BLACK);
+	gotoxy(x, y);     printscr("##      ## #### ##    ## ");
+	gotoxy(x, y + 1); printscr("##  ##  ##  ##  ###   ## ");
+	gotoxy(x, y + 2); printscr("##  ##  ##  ##  ####  ## ");
+	gotoxy(x, y + 3); printscr("##  ##  ##  ##  ## ## ## ");
+	gotoxy(x, y + 4); printscr("##  ##  ##  ##  ##  #### ");
+	gotoxy(x, y + 5); printscr("##  ##  ##  ##  ##   ### ");
+	gotoxy(x, y + 6); printscr(" ###  ###  #### ##    ## ");
+	textcolor(WHITE, BLACK);
+}
+
+void g(int x, int y) {
+	textcolor(RED1, BLACK);
+	gotoxy(x, y);     printscr(" ######   ");
+	gotoxy(x, y + 1); printscr("##    ##  ");
+	gotoxy(x, y + 2); printscr("##        ");
+	gotoxy(x, y + 3); printscr("##   #### ");
+	gotoxy(x, y + 4); printscr("##    ##  ");
+	gotoxy(x, y + 5); printscr("##    ##  ");
+	gotoxy(x, y + 6); printscr(" ######   ");
+	textcolor(WHITE, BLACK);
+}
+void a(int x, int y) {
+	textcolor(RED1, BLACK);
+	gotoxy(x, y);     printscr("   ###    ");
+	gotoxy(x, y + 1); printscr("  ## ##   ");
+	gotoxy(x, y + 2); printscr(" ##   ##  ");
+	gotoxy(x, y + 3); printscr("##     ## ");
+	gotoxy(x, y + 4); printscr("######### ");
+	gotoxy(x, y + 5); printscr("##     ## ");
+	gotoxy(x, y + 6); printscr("##     ## ");
+	textcolor(WHITE, BLACK);
+}
+void m(int x, int y) {
+	textcolor(RED1, BLACK);
+	gotoxy(x, y);     printscr("##     ## ");
+	gotoxy(x, y + 1); printscr("###   ### ");
+	gotoxy(x, y + 2); printscr("#### #### ");
+	gotoxy(x, y + 3); printscr("## ### ## ");
+	gotoxy(x, y + 4); printscr("##     ## ");
+	gotoxy(x, y + 5); printscr("##     ## ");
+	gotoxy(x, y + 6); printscr("##     ## ");
+	textcolor(WHITE, BLACK);
+}
+void e(int x, int y) {
+	textcolor(RED1, BLACK);
+	gotoxy(x, y);     printscr("######## ");
+	gotoxy(x, y + 1); printscr("##       ");
+	gotoxy(x, y + 2); printscr("##       ");
+	gotoxy(x, y + 3); printscr("######   ");
+	gotoxy(x, y + 4); printscr("##       ");
+	gotoxy(x, y + 5); printscr("##       ");
+	gotoxy(x, y + 6); printscr("######## ");
+	textcolor(WHITE, BLACK);
+}
+void o(int x, int y) {
+	textcolor(RED1, BLACK);
+	gotoxy(x, y);     printscr(" #######  ");
+	gotoxy(x, y + 1); printscr("##     ## ");
+	gotoxy(x, y + 2); printscr("##     ## ");
+	gotoxy(x, y + 3); printscr("##     ## ");
+	gotoxy(x, y + 4); printscr("##     ## ");
+	gotoxy(x, y + 5); printscr("##     ## ");
+	gotoxy(x, y + 6); printscr(" #######  ");
+	textcolor(WHITE, BLACK);
+}
+void v(int x, int y) {
+	textcolor(RED1, BLACK);
+	gotoxy(x, y);     printscr("##     ## ");
+	gotoxy(x, y + 1); printscr("##     ## ");
+	gotoxy(x, y + 2); printscr("##     ## ");
+	gotoxy(x, y + 3); printscr("##     ## ");
+	gotoxy(x, y + 4); printscr(" ##   ##  ");
+	gotoxy(x, y + 5); printscr("  ## ##   ");
+	gotoxy(x, y + 6); printscr("   ###    ");
+	textcolor(WHITE, BLACK);
+}
+void r(int x, int y) {
+	textcolor(RED1, BLACK);
+	gotoxy(x, y);     printscr("########  ");
+	gotoxy(x, y + 1); printscr("##     ## ");
+	gotoxy(x, y + 2); printscr("##     ## ");
+	gotoxy(x, y + 3); printscr("########  ");
+	gotoxy(x, y + 4); printscr("##   ##   ");
+	gotoxy(x, y + 5); printscr("##    ##  ");
+	gotoxy(x, y + 6); printscr("##     ## ");
+	textcolor(WHITE, BLACK);
+}
+
 void start(int x, int y) {
 	textcolor(CYAN1, BLACK);
 	gotoxy(x, y);     printscr(" ######  ########    ###    ########  ######## ");
@@ -70,9 +172,91 @@ void clear(int x, int y) {
 	gotoxy(x, y + 2); printscr("##       ##       ##        ##   ##  ##     ##   #### ");
 	gotoxy(x, y + 3); printscr("##       ##       ######   ##     ## ########     ##  ");
 	gotoxy(x, y + 4); printscr("##       ##       ##       ######### ##   ##          ");
-	gotoxy(x, y + 5); printscr("##    ## ##       ##       ##     ## ##    ##    #### ");
-	gotoxy(x, y + 6); printscr(" ######  ######## ######## ##     ## ##     ##   #### ");
+	gotoxy(x, y + 5); printscr("##    ## ##       ##       ##     ## ##    ##     ###  ");
+	gotoxy(x, y + 6); printscr(" ######  ######## ######## ##     ## ##     ##    ###  ");
 	textcolor(WHITE, BLACK);
+}
+
+void printGameOver() {
+	scr_clear();
+	g(XMIN, YMIN);
+	scr_switch();
+	Sleep(100);
+
+	scr_clear();
+	g(XMIN, YMIN);
+	a(XMIN+11, YMIN);
+	scr_switch();
+	Sleep(100);
+
+	scr_clear();
+	g(XMIN, YMIN);
+	a(XMIN + 11, YMIN);
+	m(XMIN + 22, YMIN);
+	scr_switch();
+	Sleep(100);
+
+	scr_clear();
+	g(XMIN, YMIN);
+	a(XMIN + 11, YMIN);
+	m(XMIN + 22, YMIN);
+	e(XMIN + 33, YMIN);
+	scr_switch();
+	Sleep(100);
+
+	scr_clear();
+	g(XMIN, YMIN);
+	a(XMIN + 11, YMIN);
+	m(XMIN + 22, YMIN);
+	e(XMIN + 33, YMIN);
+	o(XMIN + 50, YMIN);
+	scr_switch();
+	Sleep(100);
+
+	scr_clear();
+	g(XMIN, YMIN);
+	a(XMIN + 11, YMIN);
+	m(XMIN + 22, YMIN);
+	e(XMIN + 33, YMIN);
+	o(XMIN + 50, YMIN);
+	v(XMIN + 61, YMIN);
+	scr_switch();
+	Sleep(100);
+
+	scr_clear();
+	g(XMIN, YMIN);
+	a(XMIN + 11, YMIN);
+	m(XMIN + 22, YMIN);
+	e(XMIN + 33, YMIN);
+	o(XMIN + 50, YMIN);
+	v(XMIN + 61, YMIN);
+	e(XMIN + 72, YMIN);
+	scr_switch();
+	Sleep(100);
+
+	scr_clear();
+	g(XMIN, YMIN);
+	a(XMIN + 11, YMIN);
+	m(XMIN + 22, YMIN);
+	e(XMIN + 33, YMIN);
+	o(XMIN + 50, YMIN);
+	v(XMIN + 61, YMIN);
+	e(XMIN + 72, YMIN);
+	r(XMIN + 83, YMIN);
+	scr_switch();
+	Sleep(1500);
+}
+
+void printWin() {
+	scr_clear();
+	you(XMIN, YMIN);
+	scr_switch();
+	Sleep(1000);
+	scr_clear();
+	you(XMIN, YMIN);
+	win(XMIN+50, YMIN);
+	scr_switch();
+	Sleep(4000);
 }
 
 void printStart(int type) {
@@ -119,7 +303,7 @@ void printClear(int type) {
 	border();
 	stage(XMIN + 10, YMIN-3);
 	scr_switch();
-	Sleep(1000);
+	Sleep(1500);
 	
 	switch (type) {
 	case 1:
@@ -128,14 +312,14 @@ void printClear(int type) {
 		stage(XMIN + 10, YMIN-3);
 		first(XMIN + 60, YMIN-3);
 		scr_switch();
-		Sleep(1000);
+		Sleep(1500);
 		scr_clear();
 		border();
 		stage(XMIN + 10, YMIN - 3);
 		first(XMIN + 60, YMIN - 3);
 		clear(XMIN + 11, YMIN + 6);
 		scr_switch();
-		Sleep(3000);
+		Sleep(3500);
 		break;
 	case 2:
 		scr_clear();
@@ -143,14 +327,14 @@ void printClear(int type) {
 		stage(XMIN + 10, YMIN-3);
 		second(XMIN + 60, YMIN-3);
 		scr_switch();
-		Sleep(1000);
+		Sleep(1500);
 		scr_clear();
 		border();
 		stage(XMIN + 10, YMIN - 3);
 		second(XMIN + 60, YMIN - 3);
 		clear(XMIN + 11, YMIN + 6);
 		scr_switch();
-		Sleep(3000);
+		Sleep(3500);
 		break;
 	case 3:
 		scr_clear();
@@ -158,14 +342,14 @@ void printClear(int type) {
 		stage(XMIN + 10, YMIN-3);
 		third(XMIN + 60, YMIN-3);
 		scr_switch();
-		Sleep(1000);
+		Sleep(1500);
 		scr_clear();
 		border();
 		stage(XMIN + 10, YMIN - 3);
 		third(XMIN + 60, YMIN - 3);
 		clear(XMIN + 11, YMIN + 6);
 		scr_switch();
-		Sleep(3000);
+		Sleep(3500);
 		break;
 	}
 	
