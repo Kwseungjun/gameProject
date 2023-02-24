@@ -220,7 +220,7 @@ void gameInit(int* x, int* y) {
 			}
 		}
 		maxHP = 5;
-		stageMaxMonster = 2;
+		stageMaxMonster = 50;
 		break;
 	case 2:
 		tempMapX = MAP2XMAX;
@@ -232,7 +232,7 @@ void gameInit(int* x, int* y) {
 			}
 		}
 		maxHP++;
-		stageMaxMonster = 0;
+		stageMaxMonster = 100;
 		break;
 	case 3:
 		tempMapX = MAP3XMAX;
@@ -244,7 +244,7 @@ void gameInit(int* x, int* y) {
 			}
 		}
 		maxHP += 2;
-		stageMaxMonster = 0;
+		stageMaxMonster = 150;
 		break;
 	}
 	userHP = maxHP;
