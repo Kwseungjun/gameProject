@@ -11,6 +11,8 @@ void third(int x, int y);
 void printStart(int type);
 void printClear(int type);
 void printGameOver();
+void printGun();
+void reloadGun();
 void printWin();
 void g(int x, int y);
 void a(int x, int y);

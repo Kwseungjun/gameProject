@@ -401,17 +401,77 @@ void printGun() {
 
 		break;
 	case SR:
-		gotoxy(x, y);	printscr("                  ■■■                                                                    ");
-		gotoxy(x, y+1);	printscr("                ■■■■■              ■                                                  ");
-		gotoxy(x, y+2);	printscr("                  ■  ■                ■                                                  ");
-		gotoxy(x, y+3);	printscr("  ■■■■■■■■■■■■■■■■■■■■■■■                                          ■");
-		gotoxy(x, y+4);	printscr("■■                              ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-		gotoxy(x, y+5);	printscr("■                                                ■■■■■■■■■■■■■■■■■■■■■");
-		gotoxy(x, y+6);	printscr("■■■■■■■■■■■■■■■■■■■■■■■■■■■                                      ");
-		gotoxy(x, y+7);	printscr("■    ■      ■■■      ■  ■  ■        ■                                              ");
-		gotoxy(x, y+8);	printscr("■    ■      ■■        ■■■■          ■                                              ");
-		gotoxy(x, y+9);	printscr("  ■  ■                                    ■                                              ");
-		gotoxy(x, y+10);printscr("    ■■                                    ■                                              ");
+		gotoxy(x, y);	printscr("                                  ■■      ■■■■                                        ");
+		gotoxy(x, y+1);	printscr("                      ■■■■■■    ■■■■    ■                                        ");
+		gotoxy(x, y+2);	printscr("                      ■■■■■■■■■■■■■■■                                        ");
+		gotoxy(x, y+3);	printscr("                            ■■        ■■                                                ");
+		gotoxy(x, y+4);	printscr("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+		gotoxy(x, y+5);	printscr("■                ■■■■■■■■■              ■■■■■■■■■  ■■■■■■■■■■■");
+		gotoxy(x, y+6);	printscr("■            ■■  ■    ■  ■  ■■■■■■■■                ■■■                    ");
+		gotoxy(x, y+7);	printscr("■        ■■      ■  ■    ■  ■                                                        ");
+		gotoxy(x, y+8);	printscr("■      ■        ■  ■  ■■■■                                                          ");
+		gotoxy(x, y+9);	printscr("■■■■          ■  ■                                                                    ");
+		gotoxy(x, y+10);printscr("                ■■■                                                                      ");
+
+		break;
+	}
+}
+
+void reloadGun() {
+	int x = 37;
+	int y = 28;
+	switch (selectWeapon) {
+	case HG:
+		gotoxy(x, y);		printscr("                                    ■        ");
+		gotoxy(x, y + 1);	printscr("■■■■■■■■■■■■■■■■■■■■      ");
+		gotoxy(x, y + 2);	printscr("■                                    ■■■■");
+		gotoxy(x, y + 3);	printscr("■                                        ■■");
+		gotoxy(x, y + 4);	printscr("  ■            ■■■■■■■■■■■■■■  ");
+		gotoxy(x, y + 5);	printscr("    ■        ■  ■■        ■              ");
+		gotoxy(x, y + 6);	printscr("  ■        ■■    ■        ■              ");
+		gotoxy(x, y + 7);	printscr("  ■      ■  ■■    ■■■■                ");
+		gotoxy(x, y + 8);	printscr("■      ■        ■■■                      ");
+		gotoxy(x, y + 9);	printscr("■      ■                                    ");
+		gotoxy(x, y + 10);	printscr("■■■■■                                    ");
+		//space 랑 ■ 랑 크기가 달라서 그림이 깨져보이는데 콘솔상으론 제대로 보임
+		break;
+	case AR:
+		gotoxy(x, y);		printscr("                                                                          ");
+		gotoxy(x, y + 1);	printscr("            ■■■■■■■■■■■■■■■■■■■■■■■            ■  ");
+		gotoxy(x, y + 2);	printscr("■■■    ■                                              ■■■■■■■■");
+		gotoxy(x, y + 3);	printscr("■    ■■    ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+		gotoxy(x, y + 4);	printscr("■          ■  ■  ■■                ■■■                            ");
+		gotoxy(x, y + 5);	printscr("■        ■    ■  ■        ■■■                                      ");
+		gotoxy(x, y + 6);	printscr("■      ■      ■  ■        ■  ■                                      ");
+		gotoxy(x, y + 7);	printscr("■■■■        ■■■        ■  ■                                      ");
+		gotoxy(x, y + 8);	printscr("                              ■■  ■                                    ");
+		gotoxy(x, y + 9);	printscr("                                ■  ■■                                  ");
+		gotoxy(x, y + 10);	printscr("                                  ■■                                    ");
+		break;
+	case SG:
+		gotoxy(x, y);		printscr("                                                              ");
+		gotoxy(x, y + 1);	printscr("              ■■■■■■■■■■■■■■■■■■■■■■■■");
+		gotoxy(x, y + 2);	printscr("          ■■■      ■■      ■■■■■■■                ");
+		gotoxy(x, y + 3);	printscr("      ■■■■  ■    ■■■■■■  ■  ■  ■■■■■■■■  ");
+		gotoxy(x, y + 4);	printscr("    ■    ■■■■■■■■■■■■  ■  ■  ■■■■■■■■  ");
+		gotoxy(x, y + 5);	printscr("  ■    ■    ■  ■  ■        ■■■■■■■                ");
+		gotoxy(x, y + 6);	printscr("■    ■      ■■■■                                        ");
+		gotoxy(x, y + 7);	printscr("■  ■■                                                      ");
+		gotoxy(x, y + 8);	printscr("■■■                                                        ");
+
+		break;
+	case SR:
+		gotoxy(x, y);		printscr("                                  ■■      ■■■■                                        ");
+		gotoxy(x, y + 1);	printscr("                      ■■■■■■    ■■■■    ■                                        ");
+		gotoxy(x, y + 2);	printscr("                      ■■■■■■■■■■■■■■■                                        ");
+		gotoxy(x, y + 3);	printscr("                            ■■        ■■                                                ");
+		gotoxy(x, y + 4);	printscr("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+		gotoxy(x, y + 5);	printscr("■                ■■■■■■■■■              ■■■■■■■■■  ■■■■■■■■■■■");
+		gotoxy(x, y + 6);	printscr("■            ■■  ■    ■  ■  ■■■■■■■■                ■■■                    ");
+		gotoxy(x, y + 7);	printscr("■        ■■      ■  ■    ■  ■                                                        ");
+		gotoxy(x, y + 8);	printscr("■      ■        ■  ■  ■■■■      ■■■■                                            ");
+		gotoxy(x, y + 9);	printscr("■■■■          ■  ■                ■■■■                                            ");
+		gotoxy(x, y + 10);	printscr("                ■■■                                                                      ");
 
 		break;
 	}

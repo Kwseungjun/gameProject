@@ -488,7 +488,10 @@ void drawMap(int* x, int* y)
 }
 
 void drawInfo() {
-	printGun();
+	if (isReload == FALSE)
+		printGun();
+	else
+		reloadGun();
 	//체력 출력
 	gotoxy(10, 28);
 	printscr("체력 : ");
