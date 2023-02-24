@@ -38,7 +38,7 @@ void spawnMonster() {
 				mon[monsterCount].y = tempMapY;
 		}
 		if (tempMap[mon[monsterCount].y][mon[monsterCount].x] == '0') {
-			if (monsterCount == stageMaxMonster - 1) {
+			if (monsterCount % 50 == 49) {
 				tempMap[mon[monsterCount].y][mon[monsterCount].x] = 'Q';
 				mon[monsterCount].hp = 1000;
 				mon[monsterCount].typeFrame = DOUBLEDIAMOND;

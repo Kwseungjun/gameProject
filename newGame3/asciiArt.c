@@ -249,14 +249,14 @@ void printGameOver() {
 
 void printWin() {
 	scr_clear();
-	you(XMIN, YMIN);
+	you(XMIN+5, YMIN);
 	scr_switch();
 	Sleep(1000);
 	scr_clear();
-	you(XMIN, YMIN);
-	win(XMIN+50, YMIN);
+	you(XMIN+5, YMIN);
+	win(XMIN+40, YMIN);
 	scr_switch();
-	Sleep(4000);
+	Sleep(2500);
 }
 
 void printStart(int type) {

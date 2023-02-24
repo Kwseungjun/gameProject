@@ -244,7 +244,7 @@ void gameInit(int* x, int* y) {
 			}
 		}
 		maxHP += 2;
-		stageMaxMonster = 150;
+		stageMaxMonster = 200;
 		break;
 	}
 	userHP = maxHP;
